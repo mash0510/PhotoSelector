@@ -65,6 +65,12 @@
     <Compile Include="Controls\PhotoSelectControl.Designer.cs">
       <DependentUpon>PhotoSelectControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\PhotoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\PhotoDialog.Designer.cs">
+      <DependentUpon>PhotoDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,6 +81,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Controls\PhotoSelectControl.resx">
       <DependentUpon>PhotoSelectControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\PhotoDialog.resx">
+      <DependentUpon>PhotoDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>

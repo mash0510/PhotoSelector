@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace PhotoSelector.Controls
 {
@@ -27,6 +28,10 @@ namespace PhotoSelector.Controls
         /// このコントロールのサイズ変更前のサイズ
         /// </summary>
         private Size _oldCtrlSize = new Size(0, 0);
+        /// <summary>
+        /// 写真の非同期読み込みのスレッド数を制限するセマフォ
+        /// </summary>
+        private Semaphore _semaphore = new Semaphore(1, 1);
 
         /// <summary>
         /// 表示する写真情報の取得
@@ -95,7 +100,7 @@ namespace PhotoSelector.Controls
                     {
                         PhotoList[index].Location = new Point(locateX, locateY);
                         PhotoList[index].Visible = true;
-                        ((IPhotoControl)PhotoList[index]).DispImage();
+                        ((IPhotoControl)PhotoList[index]).DispImage(_semaphore);
 
                         index++;
                         break;
@@ -127,10 +132,13 @@ namespace PhotoSelector.Controls
                 int locateX = x * _cellSize.Width + CellMargin;
                 int locateY = y * _cellSize.Height + CellMargin + this.AutoScrollPosition.Y;
 
+                if (((IPhotoControl)PhotoList[i]).Index < 0)
+                    ((IPhotoControl)PhotoList[i]).Index = i;
+
                 PhotoList[i].Location = new Point(locateX, locateY);
                 PhotoList[i].Visible = true;
 
-                ((IPhotoControl)PhotoList[i]).DispImage();
+                ((IPhotoControl)PhotoList[i]).DispImage(_semaphore);
 
                 return false;
             });

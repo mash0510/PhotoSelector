@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace PhotoSelector.Controls
 {
@@ -15,6 +16,15 @@ namespace PhotoSelector.Controls
     /// </summary>
     public partial class PhotoSelectControl : UserControl, IPhotoControl
     {
+        /// <summary>
+        /// インデックス番号の設定と取得
+        /// </summary>
+        public int Index
+        {
+            get { return pb_Thumbnail.Index; }
+            set { pb_Thumbnail.Index = value; }
+        }
+
         /// <summary>
         /// 画像ファイルのフルパス
         /// </summary>
@@ -91,10 +101,11 @@ namespace PhotoSelector.Controls
         /// <summary>
         /// サムネイル画像の表示
         /// </summary>
+        /// <param name="semaphore"></param>
         /// <param name="forceUpdateImage">画像が表示されている場合でも、再度画像表示を行う（PictureBoxのサイズ変更時などに使う）</param>
-        public void DispImage(bool forceUpdateImage = false)
+        public void DispImage(Semaphore semaphore, bool forceUpdateImage = false)
         {
-            pb_Thumbnail.DispImage(forceUpdateImage);
+            pb_Thumbnail.DispImage(semaphore, forceUpdateImage);
 
             lbl_FileName.Text = pb_Thumbnail.FileName;
         }

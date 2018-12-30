@@ -22,12 +22,17 @@ namespace PhotoSelector.Controls
         /// <summary>
         /// 画像読み込みスレッドの数を制限するためのセマフォ
         /// </summary>
-        private static Semaphore semaphore = new Semaphore(1, 1);
+        private Semaphore _semaphore = null;
 
         /// <summary>
         /// EXIF情報の1つ「回転方向」を示すID
         /// </summary>
         private const int ROTATE_ORIENTATION = 0x0112;
+
+        /// <summary>
+        /// インデックス番号の設定と取得
+        /// </summary>
+        public int Index { get;  set; } = -1;
 
         /// <summary>
         /// 画像ファイルのフルパス
@@ -51,7 +56,6 @@ namespace PhotoSelector.Controls
         /// </summary>
         public PictureBoxZoom()
         {
-
         }
 
         /// <summary>
@@ -172,9 +176,9 @@ namespace PhotoSelector.Controls
 
             await Task.Run(() =>
             {
-                semaphore.WaitOne();
+                _semaphore.WaitOne();
                 img = LoadImage();
-                semaphore.Release();
+                _semaphore.Release();
             });
 
             this.Image = img;
@@ -183,9 +187,11 @@ namespace PhotoSelector.Controls
         /// <summary>
         /// 画像表示
         /// </summary>
+        /// <param name="semaphore"></param>
         /// <param name="forceUpdateImage">画像が表示されている場合でも、再度画像表示を行う（PictureBoxのサイズ変更時などに使う）</param>
-        public void DispImage(bool forceUpdateImage = false)
+        public void DispImage(Semaphore semaphore, bool forceUpdateImage = false)
         {
+            _semaphore = semaphore;
             this.DispImageBody(forceUpdateImage);
         }
     }

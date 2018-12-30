@@ -30,13 +30,14 @@
         {
             this.rb_OK = new System.Windows.Forms.RadioButton();
             this.rb_NG = new System.Windows.Forms.RadioButton();
-            this.pb_Thumbnail = new PhotoSelector.Controls.PictureBoxZoom();
             this.lbl_FileName = new System.Windows.Forms.Label();
+            this.pb_Thumbnail = new PhotoSelector.Controls.PictureBoxZoom();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Thumbnail)).BeginInit();
             this.SuspendLayout();
             // 
             // rb_OK
             // 
+            this.rb_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.rb_OK.AutoSize = true;
             this.rb_OK.Location = new System.Drawing.Point(176, 278);
             this.rb_OK.Name = "rb_OK";
@@ -48,6 +49,7 @@
             // 
             // rb_NG
             // 
+            this.rb_NG.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.rb_NG.AutoSize = true;
             this.rb_NG.Location = new System.Drawing.Point(248, 278);
             this.rb_NG.Name = "rb_NG";
@@ -57,8 +59,21 @@
             this.rb_NG.Text = "NG";
             this.rb_NG.UseVisualStyleBackColor = true;
             // 
+            // lbl_FileName
+            // 
+            this.lbl_FileName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbl_FileName.AutoSize = true;
+            this.lbl_FileName.Location = new System.Drawing.Point(21, 279);
+            this.lbl_FileName.Name = "lbl_FileName";
+            this.lbl_FileName.Size = new System.Drawing.Size(73, 18);
+            this.lbl_FileName.TabIndex = 4;
+            this.lbl_FileName.Text = "fileName";
+            // 
             // pb_Thumbnail
             // 
+            this.pb_Thumbnail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pb_Thumbnail.FileFullPath = null;
             this.pb_Thumbnail.Location = new System.Drawing.Point(3, 3);
             this.pb_Thumbnail.Name = "pb_Thumbnail";
@@ -66,15 +81,6 @@
             this.pb_Thumbnail.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pb_Thumbnail.TabIndex = 3;
             this.pb_Thumbnail.TabStop = false;
-            // 
-            // lbl_FileName
-            // 
-            this.lbl_FileName.AutoSize = true;
-            this.lbl_FileName.Location = new System.Drawing.Point(21, 279);
-            this.lbl_FileName.Name = "lbl_FileName";
-            this.lbl_FileName.Size = new System.Drawing.Size(73, 18);
-            this.lbl_FileName.TabIndex = 4;
-            this.lbl_FileName.Text = "fileName";
             // 
             // PhotoSelectControl
             // 
@@ -93,9 +99,9 @@
         }
 
         #endregion
-        private System.Windows.Forms.RadioButton rb_OK;
-        private System.Windows.Forms.RadioButton rb_NG;
         private PictureBoxZoom pb_Thumbnail;
-        private System.Windows.Forms.Label lbl_FileName;
+        public System.Windows.Forms.RadioButton rb_OK;
+        public System.Windows.Forms.RadioButton rb_NG;
+        public System.Windows.Forms.Label lbl_FileName;
     }
 }
