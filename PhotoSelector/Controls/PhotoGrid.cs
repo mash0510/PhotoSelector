@@ -100,7 +100,7 @@ namespace PhotoSelector.Controls
                     {
                         PhotoList[index].Location = new Point(locateX, locateY);
                         PhotoList[index].Visible = true;
-                        ((IPhotoControl)PhotoList[index]).DispImage(_semaphore);
+                        ((IPhotoControl)PhotoList[index]).DispThumbnailImage(_semaphore);
 
                         index++;
                         break;
@@ -138,7 +138,7 @@ namespace PhotoSelector.Controls
                 PhotoList[i].Location = new Point(locateX, locateY);
                 PhotoList[i].Visible = true;
 
-                ((IPhotoControl)PhotoList[i]).DispImage(_semaphore);
+                ((IPhotoControl)PhotoList[i]).DispThumbnailImage(_semaphore);
 
                 return false;
             });

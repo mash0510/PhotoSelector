@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PhotoSelector.Controls;
+using PhotoSelector.Dialogs;
 
 namespace PhotoSelector
 {
@@ -33,10 +34,26 @@ namespace PhotoSelector
             {
                 PhotoSelectControl ctrl = new PhotoSelectControl();
                 ctrl.FileFullPath = filePath;
+                ctrl.DoubleClick += Ctrl_DoubleClick;
                 _photoList.Add(ctrl);
             }
 
             photoGrid.PhotoList = _photoList;
+        }
+
+        /// <summary>
+        /// サムネイルのダブルクリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Ctrl_DoubleClick(object sender, EventArgs e)
+        {
+            int index = ((IPhotoControl)sender).Index;
+
+            PhotoDialog dlg = new PhotoDialog();
+            dlg.PhotoList = _photoList;
+            dlg.Show(this);
+            dlg.ShowPhoto(index);
         }
 
         private void MainWindow_SizeChanged(object sender, EventArgs e)

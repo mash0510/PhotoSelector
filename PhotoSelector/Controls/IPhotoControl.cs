@@ -14,8 +14,10 @@ namespace PhotoSelector.Controls
     {
         int Index { get; set; }
 
+        string FileFullPath { set; get; }
+
         /// <summary>
-        /// 写真の表示（非同期処理）
+        /// サムネイル写真の表示（非同期処理）
         /// </summary>
         /// <remarks>
         /// セマフォを引数で渡す理由は、写真表示するダイアログ毎にセマフォを分けたいため。
@@ -24,6 +26,12 @@ namespace PhotoSelector.Controls
         /// </remarks>
         /// <param name="semaphore">写真の同時読み込み数の上限を決めるセマフォ</param>
         /// <param name="forceUpdateImage">一度読み込まれた写真でももう一度読み込みたい場合にはtrueにする</param>
-        void DispImage(Semaphore semaphore, bool forceUpdateImage = false);
+        void DispThumbnailImage(Semaphore semaphore, bool forceUpdateImage = false);
+
+        /// <summary>
+        /// フルサイズ写真の表示（非同期処理）
+        /// </summary>
+        /// <param name="forceUpdateImage">一度読み込まれた写真でももう一度読み込みたい場合にはtrueにする</param>
+        void DispFullImage(bool forceUpdateImage = false);
     }
 }

@@ -29,8 +29,6 @@ namespace PhotoSelector.Dialogs
         /// </summary>
         public int DispPhotoIndex { get; private set; } = 0;
 
-        private Semaphore _semaphore = new Semaphore(1, 1);
-
         /// <summary>
         /// 表示中の写真コントロールの取得
         /// </summary>
@@ -48,7 +46,6 @@ namespace PhotoSelector.Dialogs
         public PhotoDialog()
         {
             InitializeComponent();
-
             Shown += PhotoDialog_Shown;
         }
 
@@ -95,7 +92,8 @@ namespace PhotoSelector.Dialogs
 
             DispPhotoIndex = index;
 
-            photoCtrl.DispImage(_semaphore, true);
+            photoSelectControl.FileFullPath = photoCtrl.FileFullPath;
+            photoSelectControl.DispFullImage(true);
         }
 
         /// <summary>
@@ -105,20 +103,21 @@ namespace PhotoSelector.Dialogs
         /// <returns></returns>
         private IPhotoControl GetDispPhoto(int index)
         {
-            if (!PhotoIndexDic.ContainsKey(index))
-                return null;
-
             int photoIndex = 0;
+
             if (PhotoIndexDic == null)
             {
                 photoIndex = index;
             }
             else
             {
+                if (!PhotoIndexDic.ContainsKey(index))
+                    return null;
+
                 photoIndex = PhotoIndexDic[index];
             }
 
-            if (PhotoList.Count >= photoIndex)
+            if (PhotoList.Count <= photoIndex)
                 return null;
 
             IPhotoControl photoCtrl = PhotoList[photoIndex] as IPhotoControl;
@@ -150,8 +149,16 @@ namespace PhotoSelector.Dialogs
         {
             int index = DispPhotoIndex + 1;
 
-            if (PhotoIndexDic.Count >= index)
-                index = PhotoIndexDic.Count - 1;
+            if (PhotoIndexDic != null)
+            {
+                if (PhotoIndexDic.Count <= index)
+                    index = PhotoIndexDic.Count - 1;
+            }
+            else
+            {
+                if (PhotoList.Count <= index)
+                    index = PhotoList.Count - 1;
+            }
 
             ShowPhoto(index);
         }

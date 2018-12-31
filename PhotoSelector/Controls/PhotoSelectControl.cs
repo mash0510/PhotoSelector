@@ -67,6 +67,15 @@ namespace PhotoSelector.Controls
         }
 
         /// <summary>
+        /// サイズモードの設定と取得
+        /// </summary>
+        public PictureBoxSizeMode PhotoSizeMode
+        {
+            get { return pb_Thumbnail.SizeMode; }
+            set { pb_Thumbnail.SizeMode = value; }
+        }
+
+        /// <summary>
         /// イベントハンドラ登録
         /// </summary>
         private void AddListner()
@@ -75,6 +84,17 @@ namespace PhotoSelector.Controls
 
             this.Click += ThumbnailControl_Click;
             pb_Thumbnail.Click += ThumbnailControl_Click;
+            pb_Thumbnail.DoubleClick += Pb_Thumbnail_DoubleClick;
+        }
+
+        /// <summary>
+        /// PictureBoxのダブルクリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Pb_Thumbnail_DoubleClick(object sender, EventArgs e)
+        {
+            this.OnDoubleClick(e);
         }
 
         /// <summary>
@@ -99,13 +119,32 @@ namespace PhotoSelector.Controls
         }
 
         /// <summary>
+        /// 大きい画像の表示
+        /// </summary>
+        private void ShowLargePicture()
+        {
+
+        }
+
+        /// <summary>
         /// サムネイル画像の表示
         /// </summary>
         /// <param name="semaphore"></param>
         /// <param name="forceUpdateImage">画像が表示されている場合でも、再度画像表示を行う（PictureBoxのサイズ変更時などに使う）</param>
-        public void DispImage(Semaphore semaphore, bool forceUpdateImage = false)
+        public void DispThumbnailImage(Semaphore semaphore, bool forceUpdateImage = false)
         {
-            pb_Thumbnail.DispImage(semaphore, forceUpdateImage);
+            pb_Thumbnail.DispThumbnailImage(semaphore, forceUpdateImage);
+
+            lbl_FileName.Text = pb_Thumbnail.FileName;
+        }
+
+        /// <summary>
+        /// フルサイズ画像の表示
+        /// </summary>
+        /// <param name="semaphore"></param>
+        public void DispFullImage(bool forceUpdateImage = false)
+        {
+            pb_Thumbnail.DispFullImage(forceUpdateImage);
 
             lbl_FileName.Text = pb_Thumbnail.FileName;
         }

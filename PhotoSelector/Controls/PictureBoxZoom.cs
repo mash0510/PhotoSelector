@@ -112,7 +112,7 @@ namespace PhotoSelector.Controls
         /// 画像の読み込み
         /// </summary>
         /// <returns></returns>
-        private Bitmap LoadImage()
+        private Bitmap LoadImage(Func<Image, Bitmap> imgAlterProc)
         {
             if (string.IsNullOrEmpty(FileFullPath))
                 return null;
@@ -126,26 +126,10 @@ namespace PhotoSelector.Controls
                 using (FileStream stream = File.OpenRead(FileFullPath))
                 using (Image orgimg = Bitmap.FromStream(stream, false, false))
                 {
-                    int resizeHeight = 0;
-                    int resizeWidth = 0;
-
                     // EXIF情報を元に、画像を正しい向きに回転させる。
                     RotateUpright(orgimg);
 
-                    if (IsLengthwiseDirection(orgimg))
-                    {
-                        // 縦撮りの写真の場合、縦方向が全部見えるサムネイル画像を生成する
-                        resizeHeight = this.Height;
-                        resizeWidth = (int)(orgimg.Width * ((double)resizeHeight / (double)orgimg.Height));
-                    }
-                    else
-                    {
-                        // 横取り写真の場合、横方向が全部見えるサムネイル画像を生成する
-                        resizeWidth = this.Width;
-                        resizeHeight = (int)(orgimg.Height * ((double)resizeWidth / (double)orgimg.Width));
-                    }
-
-                    img = new Bitmap(orgimg, new Size(resizeWidth, resizeHeight));
+                    img = imgAlterProc(orgimg);
                 }
             }
             catch
@@ -161,10 +145,10 @@ namespace PhotoSelector.Controls
         }
 
         /// <summary>
-        /// 画像の表示処理本体
+        /// サムネイル画像の表示処理本体
         /// </summary>
         /// <param name="forceUpdateImage">画像が表示されている場合でも、再度画像表示を行う（PictureBoxのサイズ変更時などに使う）</param>
-        private async void DispImageBody(bool forceUpdateImage = false)
+        private async void DispThumbnailImageBody(bool forceUpdateImage = false)
         {
             if (!forceUpdateImage && this.Image != null)
                 return;
@@ -177,7 +161,28 @@ namespace PhotoSelector.Controls
             await Task.Run(() =>
             {
                 _semaphore.WaitOne();
-                img = LoadImage();
+                img = LoadImage((image) =>
+                {
+                    int resizeHeight = 0;
+                    int resizeWidth = 0;
+
+                    if (IsLengthwiseDirection(image))
+                    {
+                        // 縦撮りの写真の場合、縦方向が全部見えるサムネイル画像を生成する
+                        resizeHeight = this.Height;
+                        resizeWidth = (int)(image.Width * ((double)resizeHeight / (double)image.Height));
+                    }
+                    else
+                    {
+                        // 横取り写真の場合、横方向が全部見えるサムネイル画像を生成する
+                        resizeWidth = this.Width;
+                        resizeHeight = (int)(image.Height * ((double)resizeWidth / (double)image.Width));
+                    }
+
+                    Bitmap alteredImage = new Bitmap(image, new Size(resizeWidth, resizeHeight));
+
+                    return alteredImage;
+                });
                 _semaphore.Release();
             });
 
@@ -185,14 +190,45 @@ namespace PhotoSelector.Controls
         }
 
         /// <summary>
-        /// 画像表示
+        /// フルサイズ画像の表示処理本体
+        /// </summary>
+        /// <param name="forceUpdateImage"></param>
+        private void DispFullImageBody(bool forceUpdateImage = false)
+        {
+            if (!forceUpdateImage && this.Image != null)
+                return;
+
+            if (_loading)
+                return;
+
+            Bitmap img = LoadImage((image) =>
+            {
+                return new Bitmap(image, image.Size.Width, image.Size.Height);
+            });
+
+            this.Image = img;
+        }
+
+
+        /// <summary>
+        /// サムネイル画像表示
         /// </summary>
         /// <param name="semaphore"></param>
         /// <param name="forceUpdateImage">画像が表示されている場合でも、再度画像表示を行う（PictureBoxのサイズ変更時などに使う）</param>
-        public void DispImage(Semaphore semaphore, bool forceUpdateImage = false)
+        public void DispThumbnailImage(Semaphore semaphore, bool forceUpdateImage = false)
         {
             _semaphore = semaphore;
-            this.DispImageBody(forceUpdateImage);
+            this.DispThumbnailImageBody(forceUpdateImage);
+        }
+
+        /// <summary>
+        /// フルサイズ画像表示
+        /// </summary>
+        /// <param name="semaphore"></param>
+        /// <param name="forceUpdateImage"></param>
+        public void DispFullImage(bool forceUpdateImage = false)
+        {
+            this.DispFullImageBody(forceUpdateImage);
         }
     }
 }
