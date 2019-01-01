@@ -37,7 +37,6 @@
             // 
             // rb_OK
             // 
-            this.rb_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.rb_OK.AutoSize = true;
             this.rb_OK.Location = new System.Drawing.Point(176, 278);
             this.rb_OK.Name = "rb_OK";
@@ -49,7 +48,6 @@
             // 
             // rb_NG
             // 
-            this.rb_NG.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.rb_NG.AutoSize = true;
             this.rb_NG.Location = new System.Drawing.Point(248, 278);
             this.rb_NG.Name = "rb_NG";
@@ -61,7 +59,6 @@
             // 
             // lbl_FileName
             // 
-            this.lbl_FileName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbl_FileName.AutoSize = true;
             this.lbl_FileName.Location = new System.Drawing.Point(21, 279);
             this.lbl_FileName.Name = "lbl_FileName";
@@ -71,10 +68,8 @@
             // 
             // pb_Thumbnail
             // 
-            this.pb_Thumbnail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pb_Thumbnail.FileFullPath = null;
+            this.pb_Thumbnail.Index = -1;
             this.pb_Thumbnail.Location = new System.Drawing.Point(3, 3);
             this.pb_Thumbnail.Name = "pb_Thumbnail";
             this.pb_Thumbnail.Size = new System.Drawing.Size(326, 265);

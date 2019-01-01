@@ -71,6 +71,13 @@ namespace PhotoSelector.Controls
         public PhotoGrid()
         {
             InitializeComponent();
+
+            this.Scroll += PhotoGrid_Scroll;
+        }
+
+        private void PhotoGrid_Scroll(object sender, ScrollEventArgs e)
+        {
+            Refresh();
         }
 
         /// <summary>

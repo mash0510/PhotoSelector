@@ -46,6 +46,9 @@ namespace PhotoSelector.Dialogs
         public PhotoDialog()
         {
             InitializeComponent();
+
+            photoSelectControl.Selectable = false;
+
             Shown += PhotoDialog_Shown;
         }
 

@@ -64,6 +64,7 @@ namespace PhotoSelector.Controls
         private void InitializeControls()
         {
             lbl_FileName.Text = string.Empty;
+            SetUIPosition();
         }
 
         /// <summary>
@@ -76,15 +77,58 @@ namespace PhotoSelector.Controls
         }
 
         /// <summary>
+        /// 選択可能かどうか
+        /// </summary>
+        public bool Selectable { get; set; } = true;
+
+        /// <summary>
         /// イベントハンドラ登録
         /// </summary>
         private void AddListner()
         {
             RemoveListner();
 
+            this.SizeChanged += PhotoSelectControl_SizeChanged;
+
             this.Click += ThumbnailControl_Click;
             pb_Thumbnail.Click += ThumbnailControl_Click;
             pb_Thumbnail.DoubleClick += Pb_Thumbnail_DoubleClick;
+        }
+
+        /// <summary>
+        /// イベントハンドラ削除
+        /// </summary>
+        private void RemoveListner()
+        {
+            this.SizeChanged -= PhotoSelectControl_SizeChanged;
+            this.Click -= ThumbnailControl_Click;
+            pb_Thumbnail.Click -= ThumbnailControl_Click;
+            pb_Thumbnail.DoubleClick -= Pb_Thumbnail_DoubleClick;
+        }
+
+        /// <summary>
+        /// サイズ変更処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PhotoSelectControl_SizeChanged(object sender, EventArgs e)
+        {
+            // AnchorによるUIコントロールの位置調整は、ダイアログに乗せたときに意図通りのサイズ変更にならないので、
+            // 自前でコードを書くようにする。
+            SetUIPosition();
+        }
+
+        /// <summary>
+        /// UIコントロールの表示位置の設定
+        /// </summary>
+        private void SetUIPosition()
+        {
+            pb_Thumbnail.Location = new Point(this.Location.X, this.Location.Y);
+            pb_Thumbnail.Size = new Size(this.Width - 6, this.Height - 43);
+
+            lbl_FileName.Location = new Point(this.Location.X + 8, this.Location.Y + pb_Thumbnail.Height + 16);
+            rb_OK.Location = new Point(this.Location.X + this.Width - 95, this.Location.Y + pb_Thumbnail.Height + 14);
+            rb_NG.Location = new Point(this.Location.X + this.Width - 50, this.Location.Y + pb_Thumbnail.Height + 14);
         }
 
         /// <summary>
@@ -98,21 +142,15 @@ namespace PhotoSelector.Controls
         }
 
         /// <summary>
-        /// イベントハンドラ削除
-        /// </summary>
-        private void RemoveListner()
-        {
-            this.Click -= ThumbnailControl_Click;
-            pb_Thumbnail.Click -= ThumbnailControl_Click;
-        }
-
-        /// <summary>
         /// クリック時の処理
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ThumbnailControl_Click(object sender, EventArgs e)
         {
+            if (!Selectable)
+                return;
+
             Selected = !Selected;
 
             this.BackColor = Selected ? SystemColors.Highlight : SystemColors.Control;
