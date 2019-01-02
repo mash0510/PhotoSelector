@@ -112,7 +112,7 @@ namespace PhotoSelector.Controls
         /// 画像の読み込み
         /// </summary>
         /// <returns></returns>
-        private Bitmap LoadImage(Func<Image, Bitmap> imgAlterProc)
+        private Bitmap LoadImage(Func<Bitmap> imgAlterProc)
         {
             if (string.IsNullOrEmpty(FileFullPath))
                 return null;
@@ -123,14 +123,7 @@ namespace PhotoSelector.Controls
 
             try
             {
-                using (FileStream stream = File.OpenRead(FileFullPath))
-                using (Image orgimg = Bitmap.FromStream(stream, false, false))
-                {
-                    // EXIF情報を元に、画像を正しい向きに回転させる。
-                    RotateUpright(orgimg);
-
-                    img = imgAlterProc(orgimg);
-                }
+                img = imgAlterProc();
             }
             catch
             {
@@ -161,27 +154,34 @@ namespace PhotoSelector.Controls
             await Task.Run(() =>
             {
                 _semaphore.WaitOne();
-                img = LoadImage((image) =>
+                img = LoadImage(() =>
                 {
-                    int resizeHeight = 0;
-                    int resizeWidth = 0;
-
-                    if (IsLengthwiseDirection(image))
+                    using (FileStream stream = File.OpenRead(FileFullPath))
+                    using (Image orgimg = Bitmap.FromStream(stream, false, false))
                     {
-                        // 縦撮りの写真の場合、縦方向が全部見えるサムネイル画像を生成する
-                        resizeHeight = this.Height;
-                        resizeWidth = (int)(image.Width * ((double)resizeHeight / (double)image.Height));
-                    }
-                    else
-                    {
-                        // 横取り写真の場合、横方向が全部見えるサムネイル画像を生成する
-                        resizeWidth = this.Width;
-                        resizeHeight = (int)(image.Height * ((double)resizeWidth / (double)image.Width));
-                    }
+                        // EXIF情報を元に、画像を正しい向きに回転させる。
+                        RotateUpright(orgimg);
 
-                    Bitmap alteredImage = new Bitmap(image, new Size(resizeWidth, resizeHeight));
+                        int resizeHeight = 0;
+                        int resizeWidth = 0;
 
-                    return alteredImage;
+                        if (IsLengthwiseDirection(orgimg))
+                        {
+                            // 縦撮りの写真の場合、縦方向が全部見えるサムネイル画像を生成する
+                            resizeHeight = this.Height;
+                            resizeWidth = (int)(orgimg.Width * ((double)resizeHeight / (double)orgimg.Height));
+                        }
+                        else
+                        {
+                            // 横取り写真の場合、横方向が全部見えるサムネイル画像を生成する
+                            resizeWidth = this.Width;
+                            resizeHeight = (int)(orgimg.Height * ((double)resizeWidth / (double)orgimg.Width));
+                        }
+
+                        Bitmap alteredImage = new Bitmap(orgimg, new Size(resizeWidth, resizeHeight));
+
+                        return alteredImage;
+                    }
                 });
                 _semaphore.Release();
             });
@@ -201,9 +201,17 @@ namespace PhotoSelector.Controls
             if (_loading)
                 return;
 
-            Bitmap img = LoadImage((image) =>
+            //Bitmap img = new Bitmap(FileFullPath);
+            //RotateUpright(img);
+
+            Bitmap img = LoadImage(() =>
             {
-                return new Bitmap(image, image.Size.Width, image.Size.Height);
+                Bitmap image = new Bitmap(FileFullPath);
+
+                // EXIF情報を元に、画像を正しい向きに回転させる。
+                RotateUpright(image);
+
+                return image;
             });
 
             this.Image = img;
