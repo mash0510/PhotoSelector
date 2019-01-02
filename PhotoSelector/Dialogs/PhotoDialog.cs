@@ -71,6 +71,9 @@ namespace PhotoSelector.Dialogs
 
             btn_Forward.Click += Btn_Forward_Click;
             btn_Back.Click += Btn_Back_Click;
+
+            photoSelectControl.OKChecked += PhotoSelectControl_OKChecked;
+            photoSelectControl.NGChecked += PhotoSelectControl_NGChecked;
         }
 
         /// <summary>
@@ -80,6 +83,9 @@ namespace PhotoSelector.Dialogs
         {
             btn_Forward.Click -= Btn_Forward_Click;
             btn_Back.Click -= Btn_Back_Click;
+
+            photoSelectControl.OKChecked -= PhotoSelectControl_OKChecked;
+            photoSelectControl.NGChecked -= PhotoSelectControl_NGChecked;
         }
 
         /// <summary>
@@ -100,13 +106,13 @@ namespace PhotoSelector.Dialogs
         }
 
         /// <summary>
-        /// 表示する写真コントロールの取得
+        /// 表示する画像のPhotoListのインデックス値を取得
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private IPhotoControl GetDispPhoto(int index)
+        private int GetDispPhotoIndex(int index)
         {
-            int photoIndex = 0;
+            int photoIndex = -1;
 
             if (PhotoIndexDic == null)
             {
@@ -115,12 +121,24 @@ namespace PhotoSelector.Dialogs
             else
             {
                 if (!PhotoIndexDic.ContainsKey(index))
-                    return null;
+                    return -1;
 
                 photoIndex = PhotoIndexDic[index];
             }
 
-            if (PhotoList.Count <= photoIndex)
+            return photoIndex;
+        }
+
+        /// <summary>
+        /// 表示する写真コントロールの取得
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private IPhotoControl GetDispPhoto(int index)
+        {
+            int photoIndex = GetDispPhotoIndex(index);
+
+            if (photoIndex < 0 || PhotoList.Count <= photoIndex)
                 return null;
 
             IPhotoControl photoCtrl = PhotoList[photoIndex] as IPhotoControl;
@@ -164,6 +182,49 @@ namespace PhotoSelector.Dialogs
             }
 
             ShowPhoto(index);
+        }
+
+        /// <summary>
+        /// OK選択時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PhotoSelectControl_OKChecked(object sender, EventArgs e)
+        {
+            SetOKNGStatus(true);
+        }
+
+        /// <summary>
+        /// NG選択時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PhotoSelectControl_NGChecked(object sender, EventArgs e)
+        {
+            SetOKNGStatus(false);
+        }
+
+        /// <summary>
+        /// OK/NGの選択状態を、マスターデータに反映させる
+        /// </summary>
+        /// <param name="OKChecked"></param>
+        private void SetOKNGStatus(bool OKChecked)
+        {
+            int index = GetDispPhotoIndex(DispPhotoIndex);
+
+            if (index < 0 || PhotoList.Count <= index)
+                return;
+
+            PhotoSelectControl ctrl = PhotoList[index] as PhotoSelectControl;
+            
+            if (OKChecked)
+            {
+                ctrl.SetOK();
+            }
+            else
+            {
+                ctrl.SetNG();
+            }
         }
     }
 }

@@ -48,6 +48,15 @@ namespace PhotoSelector.Controls
         public bool Selected { get; set; } = false;
 
         /// <summary>
+        /// OKが選択されたときのイベント
+        /// </summary>
+        public event System.EventHandler OKChecked;
+        /// <summary>
+        /// NGが選択されたときのイベント
+        /// </summary>
+        public event System.EventHandler NGChecked;
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         public PhotoSelectControl()
@@ -93,6 +102,9 @@ namespace PhotoSelector.Controls
             this.Click += ThumbnailControl_Click;
             pb_Thumbnail.Click += ThumbnailControl_Click;
             pb_Thumbnail.DoubleClick += Pb_Thumbnail_DoubleClick;
+
+            rb_OK.CheckedChanged += Rb_OK_CheckedChanged;
+            rb_NG.CheckedChanged += Rb_NG_CheckedChanged;
         }
 
         /// <summary>
@@ -104,6 +116,8 @@ namespace PhotoSelector.Controls
             this.Click -= ThumbnailControl_Click;
             pb_Thumbnail.Click -= ThumbnailControl_Click;
             pb_Thumbnail.DoubleClick -= Pb_Thumbnail_DoubleClick;
+            rb_OK.CheckedChanged -= Rb_OK_CheckedChanged;
+            rb_NG.CheckedChanged -= Rb_NG_CheckedChanged;
         }
 
         /// <summary>
@@ -157,11 +171,45 @@ namespace PhotoSelector.Controls
         }
 
         /// <summary>
-        /// 大きい画像の表示
+        /// OK画像にする
         /// </summary>
-        private void ShowLargePicture()
+        public void SetOK()
         {
+            rb_OK.Checked = true;
+        }
 
+        /// <summary>
+        /// NG画像にする
+        /// </summary>
+        public void SetNG()
+        {
+            rb_NG.Checked = true;
+        }
+
+        /// <summary>
+        /// OKが選択されたときの処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Rb_OK_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_OK.Checked)
+            {
+                OKChecked?.Invoke(sender, e);
+            }
+        }
+
+        /// <summary>
+        /// NGが選択されたときの処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Rb_NG_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_NG.Checked)
+            {
+                NGChecked?.Invoke(sender, e);
+            }
         }
 
         /// <summary>
