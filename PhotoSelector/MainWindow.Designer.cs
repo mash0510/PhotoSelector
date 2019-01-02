@@ -3,14 +3,14 @@
     partial class MainWindow
     {
         /// <summary>
-        /// 必要なデザイナー変数です。
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// 使用中のリソースをすべてクリーンアップします。
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">マネージ リソースを破棄する場合は true を指定し、その他の場合は false を指定します。</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,29 +20,96 @@
             base.Dispose(disposing);
         }
 
-        #region Windows フォーム デザイナーで生成されたコード
+        #region Windows Form Designer generated code
 
         /// <summary>
-        /// デザイナー サポートに必要なメソッドです。このメソッドの内容を
-        /// コード エディターで変更しないでください。
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menu_Open = new System.Windows.Forms.ToolStripMenuItem();
+            this.menu_Save = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.menu_ExecSorting = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.menu_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this.photoGrid = new PhotoSelector.Controls.PhotoSelectorGrid();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.rb_AllPictures = new System.Windows.Forms.RadioButton();
+            this.rb_OK = new System.Windows.Forms.RadioButton();
+            this.rb_NG = new System.Windows.Forms.RadioButton();
+            this.keepPhotoGrid = new PhotoSelector.Controls.PhotoSelectorGrid();
+            this.lbl_KeepPhotos = new System.Windows.Forms.Label();
+            this.splitContainer = new System.Windows.Forms.SplitContainer();
+            this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
+            this.splitContainer.Panel1.SuspendLayout();
+            this.splitContainer.Panel2.SuspendLayout();
+            this.splitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button1
+            // menuStrip1
             // 
-            this.button1.Location = new System.Drawing.Point(21, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(85, 37);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ファイルFToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1593, 33);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // ファイルFToolStripMenuItem
+            // 
+            this.ファイルFToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menu_Open,
+            this.menu_Save,
+            this.toolStripSeparator1,
+            this.menu_ExecSorting,
+            this.toolStripSeparator2,
+            this.menu_Quit});
+            this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
+            this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(94, 29);
+            this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
+            // 
+            // menu_Open
+            // 
+            this.menu_Open.Name = "menu_Open";
+            this.menu_Open.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.menu_Open.Size = new System.Drawing.Size(252, 30);
+            this.menu_Open.Text = "開く...";
+            // 
+            // menu_Save
+            // 
+            this.menu_Save.Name = "menu_Save";
+            this.menu_Save.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.menu_Save.Size = new System.Drawing.Size(252, 30);
+            this.menu_Save.Text = "保存する";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(249, 6);
+            // 
+            // menu_ExecSorting
+            // 
+            this.menu_ExecSorting.Name = "menu_ExecSorting";
+            this.menu_ExecSorting.Size = new System.Drawing.Size(252, 30);
+            this.menu_ExecSorting.Text = "振り分け実行";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(249, 6);
+            // 
+            // menu_Quit
+            // 
+            this.menu_Quit.Name = "menu_Quit";
+            this.menu_Quit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
+            this.menu_Quit.Size = new System.Drawing.Size(252, 30);
+            this.menu_Quit.Text = "終了(&X)";
             // 
             // photoGrid
             // 
@@ -50,53 +117,139 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.photoGrid.AutoScroll = true;
+            this.photoGrid.BackColor = System.Drawing.SystemColors.Window;
+            this.photoGrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.photoGrid.CellMargin = 4;
-            this.photoGrid.Location = new System.Drawing.Point(21, 66);
+            this.photoGrid.Location = new System.Drawing.Point(3, 55);
             this.photoGrid.Name = "photoGrid";
             this.photoGrid.PhotoList = null;
-            this.photoGrid.Size = new System.Drawing.Size(1191, 656);
-            this.photoGrid.TabIndex = 2;
+            this.photoGrid.Size = new System.Drawing.Size(1045, 851);
+            this.photoGrid.TabIndex = 1;
             // 
-            // button2
+            // rb_AllPictures
             // 
-            this.button2.Location = new System.Drawing.Point(131, 12);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(85, 37);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "OK";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.rb_AllPictures.AutoSize = true;
+            this.rb_AllPictures.Checked = true;
+            this.rb_AllPictures.Location = new System.Drawing.Point(12, 10);
+            this.rb_AllPictures.Name = "rb_AllPictures";
+            this.rb_AllPictures.Size = new System.Drawing.Size(87, 22);
+            this.rb_AllPictures.TabIndex = 2;
+            this.rb_AllPictures.TabStop = true;
+            this.rb_AllPictures.Text = "全表示";
+            this.rb_AllPictures.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // rb_OK
             // 
-            this.button3.Location = new System.Drawing.Point(246, 12);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(85, 37);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "NG";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.rb_OK.AutoSize = true;
+            this.rb_OK.Location = new System.Drawing.Point(122, 10);
+            this.rb_OK.Name = "rb_OK";
+            this.rb_OK.Size = new System.Drawing.Size(160, 22);
+            this.rb_OK.TabIndex = 3;
+            this.rb_OK.TabStop = true;
+            this.rb_OK.Text = "OK画像のみ表示";
+            this.rb_OK.UseVisualStyleBackColor = true;
+            // 
+            // rb_NG
+            // 
+            this.rb_NG.AutoSize = true;
+            this.rb_NG.Location = new System.Drawing.Point(305, 10);
+            this.rb_NG.Name = "rb_NG";
+            this.rb_NG.Size = new System.Drawing.Size(160, 22);
+            this.rb_NG.TabIndex = 4;
+            this.rb_NG.TabStop = true;
+            this.rb_NG.Text = "NG画像のみ表示";
+            this.rb_NG.UseVisualStyleBackColor = true;
+            // 
+            // keepPhotoGrid
+            // 
+            this.keepPhotoGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.keepPhotoGrid.AutoScroll = true;
+            this.keepPhotoGrid.BackColor = System.Drawing.SystemColors.Window;
+            this.keepPhotoGrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.keepPhotoGrid.CellMargin = 4;
+            this.keepPhotoGrid.Location = new System.Drawing.Point(3, 55);
+            this.keepPhotoGrid.Name = "keepPhotoGrid";
+            this.keepPhotoGrid.PhotoList = null;
+            this.keepPhotoGrid.Size = new System.Drawing.Size(507, 851);
+            this.keepPhotoGrid.TabIndex = 5;
+            // 
+            // lbl_KeepPhotos
+            // 
+            this.lbl_KeepPhotos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbl_KeepPhotos.AutoSize = true;
+            this.lbl_KeepPhotos.Location = new System.Drawing.Point(12, 10);
+            this.lbl_KeepPhotos.Name = "lbl_KeepPhotos";
+            this.lbl_KeepPhotos.Size = new System.Drawing.Size(44, 18);
+            this.lbl_KeepPhotos.TabIndex = 6;
+            this.lbl_KeepPhotos.Text = "保留";
+            // 
+            // splitContainer
+            // 
+            this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer.Location = new System.Drawing.Point(13, 47);
+            this.splitContainer.Name = "splitContainer";
+            // 
+            // splitContainer.Panel1
+            // 
+            this.splitContainer.Panel1.Controls.Add(this.photoGrid);
+            this.splitContainer.Panel1.Controls.Add(this.rb_NG);
+            this.splitContainer.Panel1.Controls.Add(this.rb_OK);
+            this.splitContainer.Panel1.Controls.Add(this.rb_AllPictures);
+            // 
+            // splitContainer.Panel2
+            // 
+            this.splitContainer.Panel2.Controls.Add(this.keepPhotoGrid);
+            this.splitContainer.Panel2.Controls.Add(this.lbl_KeepPhotos);
+            this.splitContainer.Size = new System.Drawing.Size(1568, 909);
+            this.splitContainer.SplitterDistance = 1051;
+            this.splitContainer.TabIndex = 7;
             // 
             // MainWindow
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1224, 743);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.photoGrid);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(1593, 968);
+            this.Controls.Add(this.splitContainer);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainWindow";
             this.Text = "PhotoSelector";
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.splitContainer.Panel1.ResumeLayout(false);
+            this.splitContainer.Panel1.PerformLayout();
+            this.splitContainer.Panel2.ResumeLayout(false);
+            this.splitContainer.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
+            this.splitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Button button1;
+
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem ファイルFToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menu_Open;
+        private System.Windows.Forms.ToolStripMenuItem menu_Save;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem menu_ExecSorting;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem menu_Quit;
         private Controls.PhotoSelectorGrid photoGrid;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.RadioButton rb_AllPictures;
+        private System.Windows.Forms.RadioButton rb_OK;
+        private System.Windows.Forms.RadioButton rb_NG;
+        private Controls.PhotoSelectorGrid keepPhotoGrid;
+        private System.Windows.Forms.Label lbl_KeepPhotos;
+        private System.Windows.Forms.SplitContainer splitContainer;
     }
 }
-

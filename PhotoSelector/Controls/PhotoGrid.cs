@@ -86,6 +86,9 @@ namespace PhotoSelector.Controls
         /// <param name="filterProc"></param>
         public void RefreshDisp(Func<UserControl, bool> filterProc)
         {
+            if (PhotoList == null)
+                return;
+
             int index = 0;
 
             foreach(UserControl ctrl in PhotoList)
@@ -128,6 +131,9 @@ namespace PhotoSelector.Controls
         /// </summary>
         public void RefreshDisp()
         {
+            if (PhotoList == null)
+                return;
+
             if (IsHeightOnlyChanged())
             {
                 // サイズ変更操作がウィンドウの高さのみの場合は、各コントロールの表示座標を変える必要はないので、処理しない。
