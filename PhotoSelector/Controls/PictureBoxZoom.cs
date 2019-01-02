@@ -201,9 +201,6 @@ namespace PhotoSelector.Controls
             if (_loading)
                 return;
 
-            //Bitmap img = new Bitmap(FileFullPath);
-            //RotateUpright(img);
-
             Bitmap img = LoadImage(() =>
             {
                 Bitmap image = new Bitmap(FileFullPath);
