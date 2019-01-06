@@ -149,6 +149,9 @@ namespace PhotoSelector.Controls
             if (_loading)
                 return;
 
+            if (this.Image != null)
+                return;
+
             Bitmap img = null;
 
             await Task.Run(() =>

@@ -43,9 +43,33 @@ namespace PhotoSelector.Controls
         }
 
         /// <summary>
+        /// 保留中かどうかの設定と取得
+        /// </summary>
+        public bool IsKeep { get; set; } = false;
+
+        /// <summary>
         /// 選択状態の設定と取得
         /// </summary>
         public bool Selected { get; set; } = false;
+
+        /// <summary>
+        /// サイズモードの設定と取得
+        /// </summary>
+        public PictureBoxSizeMode PhotoSizeMode
+        {
+            get { return pb_Thumbnail.SizeMode; }
+            set { pb_Thumbnail.SizeMode = value; }
+        }
+
+        /// <summary>
+        /// 選択可能かどうか
+        /// </summary>
+        public bool Selectable { get; set; } = true;
+
+        /// <summary>
+        /// ダブルクリックとシングルクリック識別用のタイマー
+        /// </summary>
+        private System.Windows.Forms.Timer _isDoubleClickTimer = new System.Windows.Forms.Timer();
 
         /// <summary>
         /// OKが選択されたときのイベント
@@ -55,6 +79,10 @@ namespace PhotoSelector.Controls
         /// NGが選択されたときのイベント
         /// </summary>
         public event System.EventHandler NGChecked;
+        /// <summary>
+        /// ダブルクリック時のイベント
+        /// </summary>
+        public event MouseEventHandler PhotoSelectControlMouseDoubleClicked;
 
         /// <summary>
         /// コンストラクタ
@@ -73,22 +101,13 @@ namespace PhotoSelector.Controls
         private void InitializeControls()
         {
             lbl_FileName.Text = string.Empty;
+            this.AllowDrop = true;
+
+            _isDoubleClickTimer.Interval = SystemInformation.DoubleClickTime;
+            _isDoubleClickTimer.Enabled = false;
+
             SetUIPosition();
         }
-
-        /// <summary>
-        /// サイズモードの設定と取得
-        /// </summary>
-        public PictureBoxSizeMode PhotoSizeMode
-        {
-            get { return pb_Thumbnail.SizeMode; }
-            set { pb_Thumbnail.SizeMode = value; }
-        }
-
-        /// <summary>
-        /// 選択可能かどうか
-        /// </summary>
-        public bool Selectable { get; set; } = true;
 
         /// <summary>
         /// イベントハンドラ登録
@@ -105,6 +124,16 @@ namespace PhotoSelector.Controls
 
             rb_OK.CheckedChanged += Rb_OK_CheckedChanged;
             rb_NG.CheckedChanged += Rb_NG_CheckedChanged;
+
+            this.MouseDown += PhotoSelectControl_MouseDown;
+            this.MouseMove += PhotoSelectControl_MouseMove;
+            this.pb_Thumbnail.MouseDown += PhotoSelectControl_MouseDown;
+            this.pb_Thumbnail.MouseMove += PhotoSelectControl_MouseMove;
+
+            this.MouseDoubleClick += PhotoSelectControl_MouseDoubleClick;
+            this.pb_Thumbnail.MouseDoubleClick += PhotoSelectControl_MouseDoubleClick;
+
+            _isDoubleClickTimer.Tick += _isDoubleClickTimer_Tick;
         }
 
         /// <summary>
@@ -118,6 +147,97 @@ namespace PhotoSelector.Controls
             pb_Thumbnail.DoubleClick -= Pb_Thumbnail_DoubleClick;
             rb_OK.CheckedChanged -= Rb_OK_CheckedChanged;
             rb_NG.CheckedChanged -= Rb_NG_CheckedChanged;
+            this.MouseDown -= PhotoSelectControl_MouseDown;
+            this.MouseMove -= PhotoSelectControl_MouseMove;
+            this.pb_Thumbnail.MouseDown -= PhotoSelectControl_MouseDown;
+            this.pb_Thumbnail.MouseMove -= PhotoSelectControl_MouseMove;
+            this.MouseDoubleClick -= PhotoSelectControl_MouseDoubleClick;
+            this.pb_Thumbnail.MouseDoubleClick -= PhotoSelectControl_MouseDoubleClick;
+            _isDoubleClickTimer.Tick -= _isDoubleClickTimer_Tick;
+        }
+
+        #region ドラッグ&ドロップとシングルクリック、ダブルクリックの識別処理
+        private bool _mouseDownFlg = false;
+        private MouseButtons _clickedButton = MouseButtons.None;
+        private bool _isDoubleClicked = false;
+
+        /// <summary>
+        /// マウス移動時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PhotoSelectControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_mouseDownFlg)
+            {
+                // マウスダウン中のマウス移動であれば、ドラッグ操作をしているということなので、
+                // ドラッグ開始する。
+                this.DoDragDrop(this, DragDropEffects.All);
+                _mouseDownFlg = false;
+            }
+        }
+
+        /// <summary>
+        /// マウスボタンを押した時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PhotoSelectControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            _clickedButton = e.Button;
+
+            _isDoubleClickTimer.Enabled = true;
+            _isDoubleClickTimer.Start();
+        }
+
+        /// <summary>
+        /// ダブルクリックのインターバルが過ぎた後の処理（＝シングルクリックと認識する）
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _isDoubleClickTimer_Tick(object sender, EventArgs e)
+        {
+            _isDoubleClickTimer.Enabled = false;
+
+            if (_isDoubleClicked)
+                return;
+
+            if (_clickedButton == MouseButtons.Left)
+            {
+                _mouseDownFlg = true;
+            }
+        }
+
+        /// <summary>
+        /// ダブルクリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PhotoSelectControl_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            PhotoSelectControlMouseDoubleClicked?.Invoke(sender, e);
+        }
+        #endregion
+
+        /// <summary>
+        /// インスタンスの複製の取得
+        /// </summary>
+        /// <returns></returns>
+        public PhotoSelectControl Copy()
+        {
+            PhotoSelectControl newInstance = new PhotoSelectControl();
+            newInstance.Index = this.Index;
+            newInstance.FileFullPath = this.FileFullPath;
+            newInstance.IsKeep = this.IsKeep;
+            newInstance.PhotoSizeMode = this.PhotoSizeMode;
+            newInstance.Selectable = this.Selectable;
+            newInstance.pb_Thumbnail.Image = this.pb_Thumbnail.Image;
+
+            newInstance.RemoveListner();
+            newInstance.rb_OK.Checked = this.rb_OK.Checked;
+            newInstance.AddListner();
+
+            return newInstance;
         }
 
         /// <summary>
@@ -167,7 +287,7 @@ namespace PhotoSelector.Controls
 
             Selected = !Selected;
 
-            this.BackColor = Selected ? SystemColors.Highlight : SystemColors.Control;
+            this.BackColor = Selected ? SystemColors.Highlight : SystemColors.Window;
         }
 
         /// <summary>

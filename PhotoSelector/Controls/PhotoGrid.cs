@@ -89,17 +89,21 @@ namespace PhotoSelector.Controls
             if (PhotoList == null)
                 return;
 
-            int index = 0;
-
-            foreach(UserControl ctrl in PhotoList)
+            if (IsHeightOnlyChanged())
             {
-                ctrl.Visible = false;
+                // サイズ変更操作がウィンドウの高さのみの場合は、各コントロールの表示座標を変える必要はないので、処理しない。
+                return;
             }
+
+            int index = 0;
 
             GridLoop((x, y, i) =>
             {
                 if (index >= PhotoList.Count)
                     return true;
+
+                if (((IPhotoControl)PhotoList[i]).Index < 0)
+                    ((IPhotoControl)PhotoList[i]).Index = i;
 
                 int locateX = x * _cellSize.Width + CellMargin;
                 int locateY = y * _cellSize.Height + CellMargin + this.AutoScrollPosition.Y;
@@ -114,6 +118,10 @@ namespace PhotoSelector.Controls
 
                         index++;
                         break;
+                    }
+                    else
+                    {
+                        PhotoList[index].Visible = false;
                     }
 
                     index++;
@@ -131,30 +139,39 @@ namespace PhotoSelector.Controls
         /// </summary>
         public void RefreshDisp()
         {
-            if (PhotoList == null)
-                return;
-
-            if (IsHeightOnlyChanged())
+            RefreshDisp((ctrl) =>
             {
-                // サイズ変更操作がウィンドウの高さのみの場合は、各コントロールの表示座標を変える必要はないので、処理しない。
-                return;
-            }
+                PhotoSelectControl photoSelectCtrl = ctrl as PhotoSelectControl;
+                if (photoSelectCtrl == null)
+                    return false;
 
-            GridLoop((x, y, i) =>
-            {
-                int locateX = x * _cellSize.Width + CellMargin;
-                int locateY = y * _cellSize.Height + CellMargin + this.AutoScrollPosition.Y;
-
-                if (((IPhotoControl)PhotoList[i]).Index < 0)
-                    ((IPhotoControl)PhotoList[i]).Index = i;
-
-                PhotoList[i].Location = new Point(locateX, locateY);
-                PhotoList[i].Visible = true;
-
-                ((IPhotoControl)PhotoList[i]).DispThumbnailImage(_semaphore);
-
-                return false;
+                return true;
             });
+
+            //if (PhotoList == null)
+            //    return;
+
+            //if (IsHeightOnlyChanged())
+            //{
+            //    // サイズ変更操作がウィンドウの高さのみの場合は、各コントロールの表示座標を変える必要はないので、処理しない。
+            //    return;
+            //}
+
+            //GridLoop((x, y, i) =>
+            //{
+            //    int locateX = x * _cellSize.Width + CellMargin;
+            //    int locateY = y * _cellSize.Height + CellMargin + this.AutoScrollPosition.Y;
+
+            //    if (((IPhotoControl)PhotoList[i]).Index < 0)
+            //        ((IPhotoControl)PhotoList[i]).Index = i;
+
+            //    PhotoList[i].Location = new Point(locateX, locateY);
+            //    PhotoList[i].Visible = true;
+
+            //    ((IPhotoControl)PhotoList[i]).DispThumbnailImage(_semaphore);
+
+            //    return false;
+            //});
         }
 
         /// <summary>

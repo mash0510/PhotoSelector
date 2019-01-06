@@ -24,6 +24,11 @@ namespace PhotoSelector
         private static List<UserControl> _photoList = new List<UserControl>();
 
         /// <summary>
+        /// 保留画像データリスト
+        /// </summary>
+        private static List<UserControl> _keepPhotoList = new List<UserControl>();
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         public MainWindow()
@@ -50,6 +55,9 @@ namespace PhotoSelector
             this.DragEnter -= MainWindow_DragEnter;
             this.DragDrop -= MainWindow_DragDrop;
 
+            keepPhotoGrid.DragEnter -= KeepPhotoGrid_DragEnter;
+            keepPhotoGrid.DragDrop -= KeepPhotoGrid_DragDrop;
+
             this.SizeChanged -= MainWindow_SizeChanged;
             this.splitContainer.SplitterMoved -= SplitContainer_SplitterMoved;
 
@@ -67,6 +75,9 @@ namespace PhotoSelector
 
             this.DragEnter += MainWindow_DragEnter;
             this.DragDrop += MainWindow_DragDrop;
+
+            keepPhotoGrid.DragEnter += KeepPhotoGrid_DragEnter;
+            keepPhotoGrid.DragDrop += KeepPhotoGrid_DragDrop;
 
             this.SizeChanged += MainWindow_SizeChanged;
             this.splitContainer.SplitterMoved += SplitContainer_SplitterMoved;
@@ -105,12 +116,12 @@ namespace PhotoSelector
             {
                 PhotoSelectControl ctrl = new PhotoSelectControl();
                 ctrl.FileFullPath = filePath;
-                ctrl.DoubleClick += Ctrl_DoubleClick; ;
+                ctrl.PhotoSelectControlMouseDoubleClicked += Ctrl_MouseDoubleClick; ;
                 _photoList.Add(ctrl);
             }
 
             photoGrid.PhotoList = _photoList;
-            photoGrid.RefreshDisp();
+            ShowThumbnails();
         }
 
         /// <summary>
@@ -131,11 +142,58 @@ namespace PhotoSelector
         }
 
         /// <summary>
+        /// 保留画像Gridへのドロップ時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void KeepPhotoGrid_DragDrop(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(typeof(PhotoSelectControl)))
+                return;
+
+            PhotoSelectControl ctrl = e.Data.GetData(typeof(PhotoSelectControl)) as PhotoSelectControl;
+
+            if (ctrl == null)
+                return;
+
+            PhotoSelectControl keepCtrl = ctrl.Copy();
+
+            if (_keepPhotoList.Contains(keepCtrl))
+                return;
+
+            ctrl.IsKeep = true;
+            keepCtrl.IsKeep = true;
+
+            _keepPhotoList.Add(keepCtrl);
+            keepPhotoGrid.PhotoList = _keepPhotoList;
+
+            ShowKeepThumbnails();
+            ShowThumbnails();
+        }
+
+        /// <summary>
+        /// 保留画像Gridへのマウスドラッグ時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void KeepPhotoGrid_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(PhotoSelectControl)))
+            {
+                e.Effect = DragDropEffects.All;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        /// <summary>
         /// サムネイル画像のダブルクリック時の処理
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Ctrl_DoubleClick(object sender, EventArgs e)
+        private void Ctrl_MouseDoubleClick(object sender, EventArgs e)
         {
             int index = ((IPhotoControl)sender).Index;
 
@@ -202,32 +260,46 @@ namespace PhotoSelector
         {
             if (rb_AllPictures.Checked)
             {
-                // 全ての画像を表示するときには、フィルター処理をしないでそのまま表示
-                photoGrid.RefreshDisp();
+                // 全ての画像を表示するときには、保留以外の写真をすべて表示
+                FilterDisp(photoGrid, (ctrl) =>
+                {
+                    return !ctrl.IsKeep;
+                });
             }
             else if (rb_OK.Checked)
             {
-                FilterDisp((ctrl) =>
+                FilterDisp(photoGrid, (ctrl) =>
                 {
-                    return ctrl.IsOK;
+                    return (ctrl.IsOK && !ctrl.IsKeep);
                 });
             }
             else if (rb_NG.Checked)
             {
-                FilterDisp((ctrl) =>
+                FilterDisp(photoGrid, (ctrl) =>
                 {
-                    return !ctrl.IsOK;
+                    return (!ctrl.IsOK && !ctrl.IsKeep);
                 });
             }
+        }
+
+        /// <summary>
+        /// 保留写真のPhotoGridの表示更新
+        /// </summary>
+        private void ShowKeepThumbnails()
+        {
+            FilterDisp(keepPhotoGrid, (ctrl) =>
+            {
+                return ctrl.IsKeep;
+            });
         }
 
         /// <summary>
         /// フィルター表示の処理本体
         /// </summary>
         /// <param name="filterCondition"></param>
-        private void FilterDisp(Func<PhotoSelectControl, bool> filterCondition)
+        private void FilterDisp(PhotoSelectorGrid photoGridCtrl, Func<PhotoSelectControl, bool> filterCondition)
         {
-            photoGrid.RefreshDisp((ctrl) =>
+            photoGridCtrl.RefreshDisp((ctrl) =>
             {
                 PhotoSelectControl photoSelectCtrl = ctrl as PhotoSelectControl;
                 if (photoSelectCtrl == null)
