@@ -25,11 +25,10 @@ namespace PhotoSelector.Library
 
             if (item.Index < 0)
             {
-                item.MainIndex = this.Count;
+                item.Index = this.Count;
             }
 
             item.IsKeep = false;
-            item.KeepIndex = -1;
 
             base.Add(item);
         }
@@ -45,7 +44,6 @@ namespace PhotoSelector.Library
                 return;
 
             item.IsKeep = false;
-            item.KeepIndex = -1;
 
             base.Insert(index, item);
         }

@@ -46,15 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\IPhotoControl.cs" />
     <Compile Include="Controls\PhotoGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\PhotoGrid.Designer.cs">
       <DependentUpon>PhotoGrid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\PhotoSelectorGrid.cs">
-      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\PictureBoxZoom.cs">
       <SubType>Component</SubType>

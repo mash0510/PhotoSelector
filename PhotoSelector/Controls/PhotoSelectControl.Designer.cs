@@ -69,7 +69,6 @@
             // pb_Thumbnail
             // 
             this.pb_Thumbnail.FileFullPath = null;
-            this.pb_Thumbnail.MainIndex = -1;
             this.pb_Thumbnail.Location = new System.Drawing.Point(3, 3);
             this.pb_Thumbnail.Name = "pb_Thumbnail";
             this.pb_Thumbnail.Size = new System.Drawing.Size(326, 265);

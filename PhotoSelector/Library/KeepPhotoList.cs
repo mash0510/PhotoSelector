@@ -11,7 +11,7 @@ namespace PhotoSelector.Library
     /// <summary>
     /// 保留画像専用のList
     /// </summary>
-    public class KeepPhotoList<T> : List<T> where T : UserControl, IPhotoControl
+    public class KeepPhotoList<T> : List<T> where T : PhotoSelectControl
     {
         /// <summary>
         /// データの追加
@@ -22,7 +22,6 @@ namespace PhotoSelector.Library
             if (this.Contains(item))
                 return;
 
-            item.KeepIndex = this.Count;
             item.IsKeep = true;
 
             base.Add(item);
@@ -34,7 +33,6 @@ namespace PhotoSelector.Library
         /// <param name="item"></param>
         public new void Remove(T item)
         {
-            item.KeepIndex = -1;
             item.IsKeep = false;
 
             base.Remove(item);

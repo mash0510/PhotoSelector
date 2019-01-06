@@ -1,6 +1,6 @@
 ﻿namespace PhotoSelector.Controls
 {
-    partial class PhotoGrid<T>
+    partial class PhotoGrid
     {
         /// <summary> 
         /// 必要なデザイナー変数です。

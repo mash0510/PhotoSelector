@@ -13,7 +13,7 @@ namespace PhotoSelector.Controls
     /// <summary>
     /// 縮小表示と、写真の向きを正しくする機能を持ったPictureBox
     /// </summary>
-    public class PictureBoxZoom : PictureBox, IPhotoControl
+    public class PictureBoxZoom : PictureBox
     {
         /// <summary>
         /// 画像読み込み中かどうか
@@ -28,39 +28,6 @@ namespace PhotoSelector.Controls
         /// EXIF情報の1つ「回転方向」を示すID
         /// </summary>
         private const int ROTATE_ORIENTATION = 0x0112;
-
-        /// <summary>
-        /// インデックス番号の設定と取得
-        /// </summary>
-        public int MainIndex { get;  set; } = -1;
-
-        /// <summary>
-        /// 保留用PhotoGridのインデックス番号
-        /// </summary>
-        public int KeepIndex { get; set; } = -1;
-
-        /// <summary>
-        /// インデックスの取得
-        /// </summary>
-        public int Index
-        {
-            get
-            {
-                if (IsKeep)
-                {
-                    return KeepIndex;
-                }
-                else
-                {
-                    return MainIndex;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 保留画像かどうか
-        /// </summary>
-        public bool IsKeep { get; set; } = false;
 
         /// <summary>
         /// 画像ファイルのフルパス

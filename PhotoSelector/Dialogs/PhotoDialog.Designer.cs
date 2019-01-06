@@ -59,7 +59,6 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.photoSelectControl.FileFullPath = null;
-            this.photoSelectControl.MainIndex = -1;
             this.photoSelectControl.Location = new System.Drawing.Point(12, 12);
             this.photoSelectControl.Name = "photoSelectControl";
             this.photoSelectControl.PhotoSizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;

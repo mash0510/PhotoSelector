@@ -14,7 +14,7 @@ namespace PhotoSelector.Controls
     /// <summary>
     /// 写真をグリッド表示するコントロール
     /// </summary>
-    public partial class PhotoGrid<T> : UserControl where T : IPhotoControl
+    public partial class PhotoGrid : UserControl
     {
         /// <summary>
         /// グリッド表示するコントロール
@@ -117,7 +117,8 @@ namespace PhotoSelector.Controls
                     {
                         PhotoList[index].Location = new Point(locateX, locateY);
                         PhotoList[index].Visible = true;
-                        ((IPhotoControl)PhotoList[index]).DispThumbnailImage(_semaphore);
+                        PhotoList[index].DispThumbnailImage(_semaphore);
+                        PhotoList[index].CellIndex = i;
 
                         index++;
                         break;

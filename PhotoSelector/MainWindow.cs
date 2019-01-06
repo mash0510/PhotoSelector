@@ -235,7 +235,7 @@ namespace PhotoSelector
             if (ctrl == null)
                 return;
 
-            int index = ctrl.Index;
+            int index = ctrl.CellIndex;
 
             PhotoDialog dlg = new PhotoDialog();
 
@@ -342,7 +342,7 @@ namespace PhotoSelector
         /// フィルター表示の処理本体
         /// </summary>
         /// <param name="filterCondition"></param>
-        private void FilterDisp(PhotoSelectorGrid photoGridCtrl, Func<PhotoSelectControl, bool> filterCondition)
+        private void FilterDisp(PhotoGrid photoGridCtrl, Func<PhotoSelectControl, bool> filterCondition)
         {
             photoGridCtrl.RefreshDisp((ctrl) =>
             {

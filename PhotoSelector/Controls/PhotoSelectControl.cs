@@ -14,33 +14,22 @@ namespace PhotoSelector.Controls
     /// <summary>
     /// サムネイルコントロール
     /// </summary>
-    public partial class PhotoSelectControl : UserControl, IPhotoControl
+    public partial class PhotoSelectControl : UserControl
     {
         /// <summary>
-        /// インデックス番号の設定と取得
+        /// 仕分け用PhotoGridのセル順に採番されるインデックス
         /// </summary>
-        public int MainIndex
-        {
-            get { return pb_Thumbnail.MainIndex; }
-            set { pb_Thumbnail.MainIndex = value; }
-        }
+        public int CellIndex { get; set; } = -1;
+
+        ///// <summary>
+        ///// 保留用PhotoGridのセル順に採番されるインデックス
+        ///// </summary>
+        //public int KeepGridCellIndex { get; set; } = -1;
 
         /// <summary>
-        /// 保留用PhotoGrid内でのインデックス番号の設定と取得
+        /// 仕分け用PhotoGridの画像Listのデータ順を示すインデックス
         /// </summary>
-        public int KeepIndex
-        {
-            get { return pb_Thumbnail.KeepIndex; }
-            set { pb_Thumbnail.KeepIndex = value; }
-        }
-
-        /// <summary>
-        /// インデックス値の取得
-        /// </summary>
-        public int Index
-        {
-            get { return pb_Thumbnail.Index; }
-        }
+        public int Index { get; set; } = -1;
 
         /// <summary>
         /// 画像ファイルのフルパス
@@ -62,11 +51,7 @@ namespace PhotoSelector.Controls
         /// <summary>
         /// 保留画像かどうか
         /// </summary>
-        public bool IsKeep
-        {
-            get { return pb_Thumbnail.IsKeep; }
-            set { pb_Thumbnail.IsKeep = value; }
-        }
+        public bool IsKeep { get; set; } = false;
  
         /// <summary>
         /// 選択状態の設定と取得

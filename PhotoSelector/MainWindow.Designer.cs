@@ -42,8 +42,8 @@
             this.lbl_KeepPhotos = new System.Windows.Forms.Label();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.btn_OKNGSort = new System.Windows.Forms.Button();
-            this.photoGrid = new PhotoSelector.Controls.PhotoSelectorGrid();
-            this.keepPhotoGrid = new PhotoSelector.Controls.PhotoSelectorGrid();
+            this.photoGrid = new PhotoSelector.Controls.PhotoGrid();
+            this.keepPhotoGrid = new PhotoSelector.Controls.PhotoGrid();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -257,11 +257,11 @@
         private System.Windows.Forms.ToolStripMenuItem menu_ExecSorting;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem menu_Quit;
-        private Controls.PhotoSelectorGrid photoGrid;
+        private Controls.PhotoGrid photoGrid;
         private System.Windows.Forms.RadioButton rb_AllPictures;
         private System.Windows.Forms.RadioButton rb_OK;
         private System.Windows.Forms.RadioButton rb_NG;
-        private Controls.PhotoSelectorGrid keepPhotoGrid;
+        private Controls.PhotoGrid keepPhotoGrid;
         private System.Windows.Forms.Label lbl_KeepPhotos;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.Button btn_OKNGSort;
