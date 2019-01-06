@@ -166,8 +166,6 @@ namespace PhotoSelector
             if (_photoList.Contains(ctrl))
                 return;
 
-            //ctrl.IsKeep = false;
-
             _photoList.Insert(ctrl.Index, ctrl);
             _keepPhotoList.Remove(ctrl);
 
@@ -209,8 +207,6 @@ namespace PhotoSelector
 
             if (_keepPhotoList.Contains(ctrl))
                 return;
-
-            //ctrl.IsKeep = true;
 
             _keepPhotoList.Add(ctrl);
             _photoList.Remove(ctrl);

@@ -108,9 +108,6 @@ namespace PhotoSelector.Controls
                 if (index >= PhotoList.Count)
                     return true;
 
-                //if (((IPhotoControl)PhotoList[i]).Index < 0)
-                //    ((IPhotoControl)PhotoList[i]).Index = i;
-
                 int locateX = x * _cellSize.Width + CellMargin;
                 int locateY = y * _cellSize.Height + CellMargin + this.AutoScrollPosition.Y;
 
