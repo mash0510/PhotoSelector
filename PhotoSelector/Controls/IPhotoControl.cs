@@ -12,9 +12,25 @@ namespace PhotoSelector.Controls
     /// </summary>
     public interface IPhotoControl
     {
-        int Index { get; set; }
+        /// <summary>
+        /// 仕分け用PhotoGrid用のインデックス番号
+        /// </summary>
+        int MainIndex { get; set; }
 
+        /// <summary>
+        /// 保留用PhotoGrid用のインデックス番号
+        /// </summary>
+        int KeepIndex { get; set; }
+
+        /// <summary>
+        /// 画像ファイルのフルパス
+        /// </summary>
         string FileFullPath { set; get; }
+
+        /// <summary>
+        /// 保留画像かどうか
+        /// </summary>
+        bool IsKeep { get; set; }
 
         /// <summary>
         /// サムネイル写真の表示（非同期処理）

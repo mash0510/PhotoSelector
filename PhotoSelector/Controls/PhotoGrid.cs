@@ -19,7 +19,7 @@ namespace PhotoSelector.Controls
         /// <summary>
         /// グリッド表示するコントロール
         /// </summary>
-        private List<UserControl> _photoList = null;
+        private List<PhotoSelectControl> _photoList = null;
         /// <summary>
         /// 1つのセルのサイズ
         /// </summary>
@@ -36,7 +36,7 @@ namespace PhotoSelector.Controls
         /// <summary>
         /// 表示する写真情報の取得
         /// </summary>
-        public List<UserControl> PhotoList
+        public List<PhotoSelectControl> PhotoList
         {
             get
             {
@@ -49,11 +49,17 @@ namespace PhotoSelector.Controls
                 if (_photoList == null)
                     return;
 
-                // コントロールのサイズを保持する（すべてのコントロールのサイズは同じなので、最初の要素のコントロールのサイズを覚えておく）
-                _cellSize = _photoList[0].Size;
-
-                foreach(UserControl ctrl in value)
+                if (_cellSize.Width == 0 && _cellSize.Height == 0)
                 {
+                    // コントロールのサイズを保持する（すべてのコントロールのサイズは同じなので、最初の要素のコントロールのサイズを覚えておく）
+                    _cellSize = _photoList[0].Size;
+                }
+
+                foreach(PhotoSelectControl ctrl in value)
+                {
+                    if (this.Controls.Contains(ctrl))
+                        continue;
+
                     ctrl.Visible = false;
                     this.Controls.Add(ctrl);
                 }
@@ -84,7 +90,7 @@ namespace PhotoSelector.Controls
         /// 表示更新
         /// </summary>
         /// <param name="filterProc"></param>
-        public void RefreshDisp(Func<UserControl, bool> filterProc)
+        public void RefreshDisp(Func<PhotoSelectControl, bool> filterProc)
         {
             if (PhotoList == null)
                 return;
@@ -102,8 +108,8 @@ namespace PhotoSelector.Controls
                 if (index >= PhotoList.Count)
                     return true;
 
-                if (((IPhotoControl)PhotoList[i]).Index < 0)
-                    ((IPhotoControl)PhotoList[i]).Index = i;
+                //if (((IPhotoControl)PhotoList[i]).Index < 0)
+                //    ((IPhotoControl)PhotoList[i]).Index = i;
 
                 int locateX = x * _cellSize.Width + CellMargin;
                 int locateY = y * _cellSize.Height + CellMargin + this.AutoScrollPosition.Y;
@@ -141,10 +147,6 @@ namespace PhotoSelector.Controls
         {
             RefreshDisp((ctrl) =>
             {
-                PhotoSelectControl photoSelectCtrl = ctrl as PhotoSelectControl;
-                if (photoSelectCtrl == null)
-                    return false;
-
                 return true;
             });
         }

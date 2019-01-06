@@ -19,10 +19,27 @@ namespace PhotoSelector.Controls
         /// <summary>
         /// インデックス番号の設定と取得
         /// </summary>
+        public int MainIndex
+        {
+            get { return pb_Thumbnail.MainIndex; }
+            set { pb_Thumbnail.MainIndex = value; }
+        }
+
+        /// <summary>
+        /// 保留用PhotoGrid内でのインデックス番号の設定と取得
+        /// </summary>
+        public int KeepIndex
+        {
+            get { return pb_Thumbnail.KeepIndex; }
+            set { pb_Thumbnail.KeepIndex = value; }
+        }
+
+        /// <summary>
+        /// インデックス値の取得
+        /// </summary>
         public int Index
         {
             get { return pb_Thumbnail.Index; }
-            set { pb_Thumbnail.Index = value; }
         }
 
         /// <summary>
@@ -43,10 +60,14 @@ namespace PhotoSelector.Controls
         }
 
         /// <summary>
-        /// 保留中かどうかの設定と取得
+        /// 保留画像かどうか
         /// </summary>
-        public bool IsKeep { get; set; } = false;
-
+        public bool IsKeep
+        {
+            get { return pb_Thumbnail.IsKeep; }
+            set { pb_Thumbnail.IsKeep = value; }
+        }
+ 
         /// <summary>
         /// 選択状態の設定と取得
         /// </summary>
@@ -215,7 +236,7 @@ namespace PhotoSelector.Controls
         /// <param name="e"></param>
         private void PhotoSelectControl_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            PhotoSelectControlMouseDoubleClicked?.Invoke(sender, e);
+            PhotoSelectControlMouseDoubleClicked?.Invoke(this, e);
         }
         #endregion
 

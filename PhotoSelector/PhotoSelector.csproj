@@ -71,6 +71,8 @@
     <Compile Include="Dialogs\PhotoDialog.Designer.cs">
       <DependentUpon>PhotoDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Library\KeepPhotoList.cs" />
+    <Compile Include="Library\MainPhotoList.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>

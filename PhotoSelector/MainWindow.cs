@@ -1,5 +1,6 @@
 ﻿using PhotoSelector.Controls;
 using PhotoSelector.Dialogs;
+using PhotoSelector.Library;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,12 +22,12 @@ namespace PhotoSelector
         /// <summary>
         /// 整理対象の画像データリスト
         /// </summary>
-        private static List<UserControl> _photoList = new List<UserControl>();
+        private static MainPhotoList<PhotoSelectControl> _photoList = new MainPhotoList<PhotoSelectControl>();
 
         /// <summary>
         /// 保留画像データリスト
         /// </summary>
-        private static List<UserControl> _keepPhotoList = new List<UserControl>();
+        private static KeepPhotoList<PhotoSelectControl> _keepPhotoList = new KeepPhotoList<PhotoSelectControl>();
 
         /// <summary>
         /// コンストラクタ
@@ -58,6 +59,9 @@ namespace PhotoSelector
             keepPhotoGrid.DragEnter -= KeepPhotoGrid_DragEnter;
             keepPhotoGrid.DragDrop -= KeepPhotoGrid_DragDrop;
 
+            photoGrid.DragEnter -= PhotoGrid_DragEnter;
+            photoGrid.DragDrop -= PhotoGrid_DragDrop;
+
             this.SizeChanged -= MainWindow_SizeChanged;
             this.splitContainer.SplitterMoved -= SplitContainer_SplitterMoved;
 
@@ -78,6 +82,9 @@ namespace PhotoSelector
 
             keepPhotoGrid.DragEnter += KeepPhotoGrid_DragEnter;
             keepPhotoGrid.DragDrop += KeepPhotoGrid_DragDrop;
+
+            photoGrid.DragEnter += PhotoGrid_DragEnter;
+            photoGrid.DragDrop += PhotoGrid_DragDrop;
 
             this.SizeChanged += MainWindow_SizeChanged;
             this.splitContainer.SplitterMoved += SplitContainer_SplitterMoved;
@@ -116,7 +123,7 @@ namespace PhotoSelector
             {
                 PhotoSelectControl ctrl = new PhotoSelectControl();
                 ctrl.FileFullPath = filePath;
-                ctrl.PhotoSelectControlMouseDoubleClicked += Ctrl_MouseDoubleClick; ;
+                ctrl.PhotoSelectControlMouseDoubleClicked += Ctrl_MouseDoubleClick;
                 _photoList.Add(ctrl);
             }
 
@@ -132,6 +139,50 @@ namespace PhotoSelector
         private void MainWindow_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.All;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        /// <summary>
+        /// 仕分け画像Gridへのドロップ時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PhotoGrid_DragDrop(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(typeof(PhotoSelectControl)))
+                return;
+
+            PhotoSelectControl ctrl = e.Data.GetData(typeof(PhotoSelectControl)) as PhotoSelectControl;
+
+            if (ctrl == null)
+                return;
+
+            if (_photoList.Contains(ctrl))
+                return;
+
+            //ctrl.IsKeep = false;
+
+            _photoList.Insert(ctrl.Index, ctrl);
+            _keepPhotoList.Remove(ctrl);
+
+            ShowKeepThumbnails();
+            ShowThumbnails();
+        }
+
+        /// <summary>
+        /// 仕分け画像Gridへのマウスドラッグ時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PhotoGrid_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(PhotoSelectControl)))
             {
                 e.Effect = DragDropEffects.All;
             }
@@ -159,7 +210,7 @@ namespace PhotoSelector
             if (_keepPhotoList.Contains(ctrl))
                 return;
 
-            ctrl.IsKeep = true;
+            //ctrl.IsKeep = true;
 
             _keepPhotoList.Add(ctrl);
             _photoList.Remove(ctrl);
@@ -194,10 +245,23 @@ namespace PhotoSelector
         /// <param name="e"></param>
         private void Ctrl_MouseDoubleClick(object sender, EventArgs e)
         {
-            int index = ((IPhotoControl)sender).Index;
+            var ctrl = sender as PhotoSelectControl;
+            if (ctrl == null)
+                return;
+
+            int index = ctrl.Index;
 
             PhotoDialog dlg = new PhotoDialog();
-            dlg.PhotoList = _photoList;
+
+            if (ctrl.IsKeep)
+            {
+                dlg.PhotoList = _keepPhotoList;
+            }
+            else
+            {
+                dlg.PhotoList = _photoList;
+            }
+
             dlg.Show(this);
             dlg.ShowPhoto(index);
         }
@@ -210,6 +274,7 @@ namespace PhotoSelector
         private void MainWindow_SizeChanged(object sender, EventArgs e)
         {
             ShowThumbnails();
+            ShowKeepThumbnails();
         }
 
         /// <summary>
@@ -220,6 +285,7 @@ namespace PhotoSelector
         private void SplitContainer_SplitterMoved(object sender, SplitterEventArgs e)
         {
             ShowThumbnails();
+            ShowKeepThumbnails();
         }
 
         /// <summary>
@@ -259,24 +325,21 @@ namespace PhotoSelector
         {
             if (rb_AllPictures.Checked)
             {
-                // 全ての画像を表示するときには、保留以外の写真をすべて表示
-                FilterDisp(photoGrid, (ctrl) =>
-                {
-                    return !ctrl.IsKeep;
-                });
+                // 全ての画像を表示するときには、すべて表示
+                photoGrid.RefreshDisp();
             }
             else if (rb_OK.Checked)
             {
                 FilterDisp(photoGrid, (ctrl) =>
                 {
-                    return (ctrl.IsOK && !ctrl.IsKeep);
+                    return (ctrl.IsOK);
                 });
             }
             else if (rb_NG.Checked)
             {
                 FilterDisp(photoGrid, (ctrl) =>
                 {
-                    return (!ctrl.IsOK && !ctrl.IsKeep);
+                    return (!ctrl.IsOK);
                 });
             }
         }
@@ -286,10 +349,7 @@ namespace PhotoSelector
         /// </summary>
         private void ShowKeepThumbnails()
         {
-            FilterDisp(keepPhotoGrid, (ctrl) =>
-            {
-                return ctrl.IsKeep;
-            });
+            keepPhotoGrid.RefreshDisp();
         }
 
         /// <summary>

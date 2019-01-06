@@ -32,7 +32,35 @@ namespace PhotoSelector.Controls
         /// <summary>
         /// インデックス番号の設定と取得
         /// </summary>
-        public int Index { get;  set; } = -1;
+        public int MainIndex { get;  set; } = -1;
+
+        /// <summary>
+        /// 保留用PhotoGridのインデックス番号
+        /// </summary>
+        public int KeepIndex { get; set; } = -1;
+
+        /// <summary>
+        /// インデックスの取得
+        /// </summary>
+        public int Index
+        {
+            get
+            {
+                if (IsKeep)
+                {
+                    return KeepIndex;
+                }
+                else
+                {
+                    return MainIndex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 保留画像かどうか
+        /// </summary>
+        public bool IsKeep { get; set; } = false;
 
         /// <summary>
         /// 画像ファイルのフルパス

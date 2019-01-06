@@ -17,12 +17,7 @@ namespace PhotoSelector.Dialogs
         /// <summary>
         /// 全ての写真コントロールのリスト
         /// </summary>
-        public List<UserControl> PhotoList { get; set; } = null;
-
-        /// <summary>
-        /// PhotoListプロパティに指定した写真の内、「進む」「戻る」ボタンで行き来する写真のindex番号
-        /// </summary>
-        public Dictionary<int, int> PhotoIndexDic { get; set; } = null;
+        public List<PhotoSelectControl> PhotoList { get; set; } = null;
 
         /// <summary>
         /// 表示中の写真のPhotoIndexDicのインデックス値の取得
@@ -32,7 +27,7 @@ namespace PhotoSelector.Dialogs
         /// <summary>
         /// 表示中の写真コントロールの取得
         /// </summary>
-        public IPhotoControl DispPhoto
+        public PhotoSelectControl DispPhoto
         {
             get
             {
@@ -94,7 +89,7 @@ namespace PhotoSelector.Dialogs
         /// <param name="index"></param>
         public void ShowPhoto(int index)
         {
-            IPhotoControl photoCtrl = GetDispPhoto(index);
+            PhotoSelectControl photoCtrl = GetDispPhoto(index);
 
             if (photoCtrl == null)
                 return;
@@ -114,17 +109,7 @@ namespace PhotoSelector.Dialogs
         {
             int photoIndex = -1;
 
-            if (PhotoIndexDic == null)
-            {
                 photoIndex = index;
-            }
-            else
-            {
-                if (!PhotoIndexDic.ContainsKey(index))
-                    return -1;
-
-                photoIndex = PhotoIndexDic[index];
-            }
 
             return photoIndex;
         }
@@ -134,14 +119,12 @@ namespace PhotoSelector.Dialogs
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private IPhotoControl GetDispPhoto(int index)
+        private PhotoSelectControl GetDispPhoto(int index)
         {
-            int photoIndex = GetDispPhotoIndex(index);
-
-            if (photoIndex < 0 || PhotoList.Count <= photoIndex)
+            if (index < 0 || PhotoList.Count <= index)
                 return null;
 
-            IPhotoControl photoCtrl = PhotoList[photoIndex] as IPhotoControl;
+            var photoCtrl = PhotoList[index];
 
             return photoCtrl;
         }
@@ -170,16 +153,8 @@ namespace PhotoSelector.Dialogs
         {
             int index = DispPhotoIndex + 1;
 
-            if (PhotoIndexDic != null)
-            {
-                if (PhotoIndexDic.Count <= index)
-                    index = PhotoIndexDic.Count - 1;
-            }
-            else
-            {
-                if (PhotoList.Count <= index)
-                    index = PhotoList.Count - 1;
-            }
+            if (PhotoList.Count <= index)
+                index = PhotoList.Count - 1;
 
             ShowPhoto(index);
         }
@@ -215,7 +190,7 @@ namespace PhotoSelector.Dialogs
             if (index < 0 || PhotoList.Count <= index)
                 return;
 
-            PhotoSelectControl ctrl = PhotoList[index] as PhotoSelectControl;
+            var ctrl = PhotoList[index];
             
             if (OKChecked)
             {
