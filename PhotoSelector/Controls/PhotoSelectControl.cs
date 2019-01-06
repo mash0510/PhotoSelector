@@ -220,27 +220,6 @@ namespace PhotoSelector.Controls
         #endregion
 
         /// <summary>
-        /// インスタンスの複製の取得
-        /// </summary>
-        /// <returns></returns>
-        public PhotoSelectControl Copy()
-        {
-            PhotoSelectControl newInstance = new PhotoSelectControl();
-            newInstance.Index = this.Index;
-            newInstance.FileFullPath = this.FileFullPath;
-            newInstance.IsKeep = this.IsKeep;
-            newInstance.PhotoSizeMode = this.PhotoSizeMode;
-            newInstance.Selectable = this.Selectable;
-            newInstance.pb_Thumbnail.Image = this.pb_Thumbnail.Image;
-
-            newInstance.RemoveListner();
-            newInstance.rb_OK.Checked = this.rb_OK.Checked;
-            newInstance.AddListner();
-
-            return newInstance;
-        }
-
-        /// <summary>
         /// サイズ変更処理
         /// </summary>
         /// <param name="sender"></param>

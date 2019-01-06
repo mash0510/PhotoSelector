@@ -147,31 +147,6 @@ namespace PhotoSelector.Controls
 
                 return true;
             });
-
-            //if (PhotoList == null)
-            //    return;
-
-            //if (IsHeightOnlyChanged())
-            //{
-            //    // サイズ変更操作がウィンドウの高さのみの場合は、各コントロールの表示座標を変える必要はないので、処理しない。
-            //    return;
-            //}
-
-            //GridLoop((x, y, i) =>
-            //{
-            //    int locateX = x * _cellSize.Width + CellMargin;
-            //    int locateY = y * _cellSize.Height + CellMargin + this.AutoScrollPosition.Y;
-
-            //    if (((IPhotoControl)PhotoList[i]).Index < 0)
-            //        ((IPhotoControl)PhotoList[i]).Index = i;
-
-            //    PhotoList[i].Location = new Point(locateX, locateY);
-            //    PhotoList[i].Visible = true;
-
-            //    ((IPhotoControl)PhotoList[i]).DispThumbnailImage(_semaphore);
-
-            //    return false;
-            //});
         }
 
         /// <summary>

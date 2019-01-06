@@ -156,15 +156,14 @@ namespace PhotoSelector
             if (ctrl == null)
                 return;
 
-            PhotoSelectControl keepCtrl = ctrl.Copy();
-
-            if (_keepPhotoList.Contains(keepCtrl))
+            if (_keepPhotoList.Contains(ctrl))
                 return;
 
             ctrl.IsKeep = true;
-            keepCtrl.IsKeep = true;
 
-            _keepPhotoList.Add(keepCtrl);
+            _keepPhotoList.Add(ctrl);
+            _photoList.Remove(ctrl);
+
             keepPhotoGrid.PhotoList = _keepPhotoList;
 
             ShowKeepThumbnails();
