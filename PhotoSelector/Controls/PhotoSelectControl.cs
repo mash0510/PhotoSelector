@@ -17,14 +17,9 @@ namespace PhotoSelector.Controls
     public partial class PhotoSelectControl : UserControl
     {
         /// <summary>
-        /// 仕分け用PhotoGridのセル順に採番されるインデックス
+        /// PhotoGridのセル順に採番されるインデックス
         /// </summary>
         public int CellIndex { get; set; } = -1;
-
-        ///// <summary>
-        ///// 保留用PhotoGridのセル順に採番されるインデックス
-        ///// </summary>
-        //public int KeepGridCellIndex { get; set; } = -1;
 
         /// <summary>
         /// 仕分け用PhotoGridの画像Listのデータ順を示すインデックス
@@ -75,7 +70,7 @@ namespace PhotoSelector.Controls
         /// <summary>
         /// ダブルクリックとシングルクリック識別用のタイマー
         /// </summary>
-        private System.Windows.Forms.Timer _isDoubleClickTimer = new System.Windows.Forms.Timer();
+        private System.Timers.Timer _isDoubleClickTimer = new System.Timers.Timer();
 
         /// <summary>
         /// OKが選択されたときのイベント
@@ -139,7 +134,7 @@ namespace PhotoSelector.Controls
             this.MouseDoubleClick += PhotoSelectControl_MouseDoubleClick;
             this.pb_Thumbnail.MouseDoubleClick += PhotoSelectControl_MouseDoubleClick;
 
-            _isDoubleClickTimer.Tick += _isDoubleClickTimer_Tick;
+            _isDoubleClickTimer.Elapsed += DoubleClickTimer_Elapsed;
         }
 
         /// <summary>
@@ -159,13 +154,21 @@ namespace PhotoSelector.Controls
             this.pb_Thumbnail.MouseMove -= PhotoSelectControl_MouseMove;
             this.MouseDoubleClick -= PhotoSelectControl_MouseDoubleClick;
             this.pb_Thumbnail.MouseDoubleClick -= PhotoSelectControl_MouseDoubleClick;
-            _isDoubleClickTimer.Tick -= _isDoubleClickTimer_Tick;
+            _isDoubleClickTimer.Elapsed -= DoubleClickTimer_Elapsed;
         }
 
         #region ドラッグ&ドロップとシングルクリック、ダブルクリックの識別処理
         private bool _mouseDownFlg = false;
         private MouseButtons _clickedButton = MouseButtons.None;
         private bool _isDoubleClicked = false;
+        /// <summary>
+        /// マウスの連続2回クリック時に、マウスポインタがこの範囲に入っていたらダブルクリックとみなす。
+        /// </summary>
+        private Size _doubleClickSize = new Size(10, 10);
+        /// <summary>
+        /// マウスボタン押下時の、ダブルクリック範囲の矩形（_doubleClickSizeとe.Locationから算出する）
+        /// </summary>
+        Rectangle _doubleClickRectangle = new Rectangle();
 
         /// <summary>
         /// マウス移動時の処理
@@ -174,6 +177,11 @@ namespace PhotoSelector.Controls
         /// <param name="e"></param>
         private void PhotoSelectControl_MouseMove(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Left && !_doubleClickRectangle.Contains(e.Location))
+            {
+                _mouseDownFlg = true;
+            }
+
             if (_mouseDownFlg)
             {
                 // マウスダウン中のマウス移動であれば、ドラッグ操作をしているということなので、
@@ -191,6 +199,9 @@ namespace PhotoSelector.Controls
         private void PhotoSelectControl_MouseDown(object sender, MouseEventArgs e)
         {
             _clickedButton = e.Button;
+            _doubleClickRectangle = new Rectangle(e.X - (_doubleClickSize.Width / 2), e.Y - (_doubleClickSize.Height / 2),
+                                                         _doubleClickSize.Width, _doubleClickSize.Height);
+
 
             _isDoubleClickTimer.Enabled = true;
             _isDoubleClickTimer.Start();
@@ -201,12 +212,15 @@ namespace PhotoSelector.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void _isDoubleClickTimer_Tick(object sender, EventArgs e)
+        private void DoubleClickTimer_Elapsed(object sender, EventArgs e)
         {
             _isDoubleClickTimer.Enabled = false;
 
             if (_isDoubleClicked)
+            {
+                _isDoubleClicked = false;
                 return;
+            }
 
             if (_clickedButton == MouseButtons.Left)
             {
@@ -221,6 +235,8 @@ namespace PhotoSelector.Controls
         /// <param name="e"></param>
         private void PhotoSelectControl_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            _isDoubleClicked = true;
+
             PhotoSelectControlMouseDoubleClicked?.Invoke(this, e);
         }
         #endregion
