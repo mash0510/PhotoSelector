@@ -15,7 +15,7 @@ namespace PhotoSelector.Library
     public class MainPhotoList<T> : List<T> where T : PhotoSelectControl
     {
         /// <summary>
-        /// データの追加
+        /// PhotoSelectControlの追加
         /// </summary>
         /// <param name="item"></param>
         public new void Add(T item)
@@ -34,18 +34,17 @@ namespace PhotoSelector.Library
         }
 
         /// <summary>
-        /// データの挿入
+        /// PhotoSelectControlを、そのコントロールのIndex値の位置に挿入する
         /// </summary>
-        /// <param name="index"></param>
         /// <param name="item"></param>
-        public new void Insert(int index, T item)
+        public void InsertControl(T item)
         {
             if (this.Contains(item))
                 return;
 
             item.IsKeep = false;
 
-            base.Insert(index, item);
+            base.Insert(item.Index, item);
         }
     }
 }

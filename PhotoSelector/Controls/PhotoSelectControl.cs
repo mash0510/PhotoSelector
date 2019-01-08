@@ -68,11 +68,6 @@ namespace PhotoSelector.Controls
         public bool Selectable { get; set; } = true;
 
         /// <summary>
-        /// ダブルクリックとシングルクリック識別用のタイマー
-        /// </summary>
-        private System.Timers.Timer _isDoubleClickTimer = new System.Timers.Timer();
-
-        /// <summary>
         /// OKが選択されたときのイベント
         /// </summary>
         public event System.EventHandler OKChecked;
@@ -104,9 +99,6 @@ namespace PhotoSelector.Controls
             lbl_FileName.Text = string.Empty;
             this.AllowDrop = true;
 
-            _isDoubleClickTimer.Interval = SystemInformation.DoubleClickTime;
-            _isDoubleClickTimer.Enabled = false;
-
             SetUIPosition();
         }
 
@@ -131,10 +123,11 @@ namespace PhotoSelector.Controls
             this.pb_Thumbnail.MouseDown += PhotoSelectControl_MouseDown;
             this.pb_Thumbnail.MouseMove += PhotoSelectControl_MouseMove;
 
+            this.pb_Thumbnail.DragEnter += Pb_Thumbnail_DragEnter;
+            this.pb_Thumbnail.DragDrop += Pb_Thumbnail_DragDrop;
+
             this.MouseDoubleClick += PhotoSelectControl_MouseDoubleClick;
             this.pb_Thumbnail.MouseDoubleClick += PhotoSelectControl_MouseDoubleClick;
-
-            _isDoubleClickTimer.Elapsed += DoubleClickTimer_Elapsed;
         }
 
         /// <summary>
@@ -152,18 +145,19 @@ namespace PhotoSelector.Controls
             this.MouseMove -= PhotoSelectControl_MouseMove;
             this.pb_Thumbnail.MouseDown -= PhotoSelectControl_MouseDown;
             this.pb_Thumbnail.MouseMove -= PhotoSelectControl_MouseMove;
+            this.pb_Thumbnail.DragEnter -= Pb_Thumbnail_DragEnter;
+            this.pb_Thumbnail.DragDrop -= Pb_Thumbnail_DragDrop;
             this.MouseDoubleClick -= PhotoSelectControl_MouseDoubleClick;
             this.pb_Thumbnail.MouseDoubleClick -= PhotoSelectControl_MouseDoubleClick;
-            _isDoubleClickTimer.Elapsed -= DoubleClickTimer_Elapsed;
         }
 
-        #region ドラッグ&ドロップとシングルクリック、ダブルクリックの識別処理
-        private bool _mouseDownFlg = false;
-        private MouseButtons _clickedButton = MouseButtons.None;
-        private bool _isDoubleClicked = false;
+        #region マウスドラッグ操作とダブルクリックの識別処理
         /// <summary>
         /// マウスの連続2回クリック時に、マウスポインタがこの範囲に入っていたらダブルクリックとみなす。
         /// </summary>
+        /// <remarks>
+        /// SystemInformation.DoubleClickSizeを試してみたが（デバッガで確認したところ、4ドット四方だった）、範囲が狭すぎたため、独自に定義する。
+        /// </remarks>
         private Size _doubleClickSize = new Size(10, 10);
         /// <summary>
         /// マウスボタン押下時の、ダブルクリック範囲の矩形（_doubleClickSizeとe.Locationから算出する）
@@ -177,18 +171,16 @@ namespace PhotoSelector.Controls
         /// <param name="e"></param>
         private void PhotoSelectControl_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && !_doubleClickRectangle.Contains(e.Location))
-            {
-                _mouseDownFlg = true;
-            }
+            // マウスドラッグ操作かどうかの判定
+            // ・左クリックされていない
+            // ・左クリックでも、マウスカーソルの位置がダブルクリック範囲内に収まっている（＝ダブルクリックされた）
+            // 以上の場合はマウスドラッグ操作とは見なさない。
+            if (e.Button != MouseButtons.Left || _doubleClickRectangle.Contains(e.Location))
+                return;
 
-            if (_mouseDownFlg)
-            {
-                // マウスダウン中のマウス移動であれば、ドラッグ操作をしているということなので、
-                // ドラッグ開始する。
-                this.DoDragDrop(this, DragDropEffects.All);
-                _mouseDownFlg = false;
-            }
+            // マウスダウン中のマウス移動であれば、ドラッグ操作をしているということなので、
+            // ドラッグ開始する。
+            this.DoDragDrop(this, DragDropEffects.All);
         }
 
         /// <summary>
@@ -198,34 +190,13 @@ namespace PhotoSelector.Controls
         /// <param name="e"></param>
         private void PhotoSelectControl_MouseDown(object sender, MouseEventArgs e)
         {
-            _clickedButton = e.Button;
+            if (e.Button != MouseButtons.Left)
+                return;
+
+            // ダブルクリックとして認識するマウスカーソルの移動範囲を計算する。
+            // （具体的には、ここで計算した矩形の範囲内でもう一度マウスクリックがなされたら、マウスドラッグ処理とは見なさないようにする）
             _doubleClickRectangle = new Rectangle(e.X - (_doubleClickSize.Width / 2), e.Y - (_doubleClickSize.Height / 2),
                                                          _doubleClickSize.Width, _doubleClickSize.Height);
-
-
-            _isDoubleClickTimer.Enabled = true;
-            _isDoubleClickTimer.Start();
-        }
-
-        /// <summary>
-        /// ダブルクリックのインターバルが過ぎた後の処理（＝シングルクリックと認識する）
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DoubleClickTimer_Elapsed(object sender, EventArgs e)
-        {
-            _isDoubleClickTimer.Enabled = false;
-
-            if (_isDoubleClicked)
-            {
-                _isDoubleClicked = false;
-                return;
-            }
-
-            if (_clickedButton == MouseButtons.Left)
-            {
-                _mouseDownFlg = true;
-            }
         }
 
         /// <summary>
@@ -235,9 +206,43 @@ namespace PhotoSelector.Controls
         /// <param name="e"></param>
         private void PhotoSelectControl_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            _isDoubleClicked = true;
-
             PhotoSelectControlMouseDoubleClicked?.Invoke(this, e);
+        }
+        #endregion
+
+        #region サムネイル用PictureBoxへのマウス操作が発生したときの処理
+        // 本コントロールに乗っているPictureBoxコントロールに対するマウス操作は、以下のように別途書く必要がある
+        // （PhotoSelectControl自体は、PictureBoxコントロールの裏に隠れているため、PhotoSelectControl自体のマウス操作処理が働かない）
+        // それぞれ、PhotoSelectControl側のダブルクリック処理、ドラッグ系処理が発生したものとして扱うように処理する
+
+        /// <summary>
+        /// PictureBoxのダブルクリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Pb_Thumbnail_DoubleClick(object sender, EventArgs e)
+        {
+            this.OnDoubleClick(e);
+        }
+
+        /// <summary>
+        /// PictureBoxへのドラッグドロップが発生したときの処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Pb_Thumbnail_DragDrop(object sender, DragEventArgs e)
+        {
+            this.OnDragDrop(e);
+        }
+
+        /// <summary>
+        /// PictureBoxへのドラッグが実行されたときの処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Pb_Thumbnail_DragEnter(object sender, DragEventArgs e)
+        {
+            this.OnDragEnter(e);
         }
         #endregion
 
@@ -264,16 +269,6 @@ namespace PhotoSelector.Controls
             lbl_FileName.Location = new Point(this.Location.X + 8, this.Location.Y + pb_Thumbnail.Height + 16);
             rb_OK.Location = new Point(this.Location.X + this.Width - 95, this.Location.Y + pb_Thumbnail.Height + 14);
             rb_NG.Location = new Point(this.Location.X + this.Width - 50, this.Location.Y + pb_Thumbnail.Height + 14);
-        }
-
-        /// <summary>
-        /// PictureBoxのダブルクリック時の処理
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Pb_Thumbnail_DoubleClick(object sender, EventArgs e)
-        {
-            this.OnDoubleClick(e);
         }
 
         /// <summary>

@@ -149,7 +149,7 @@ namespace PhotoSelector
                     return;
 
                 _keepPhotoList.Remove(ctrl);
-                _photoList.Insert(ctrl.Index, ctrl);
+                _photoList.InsertControl(ctrl);
 
                 photoGrid.PhotoList = _photoList;
                 keepPhotoGrid.PhotoList = _keepPhotoList;
