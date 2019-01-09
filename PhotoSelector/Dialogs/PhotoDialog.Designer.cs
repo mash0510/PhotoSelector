@@ -55,13 +55,18 @@
             // 
             // photoSelectControl
             // 
+            this.photoSelectControl.AllowDrop = true;
             this.photoSelectControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.photoSelectControl.CellIndex = -1;
             this.photoSelectControl.FileFullPath = null;
+            this.photoSelectControl.Index = -1;
+            this.photoSelectControl.IsKeep = false;
             this.photoSelectControl.Location = new System.Drawing.Point(12, 12);
             this.photoSelectControl.Name = "photoSelectControl";
             this.photoSelectControl.PhotoSizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.photoSelectControl.Selectable = true;
             this.photoSelectControl.Selected = false;
             this.photoSelectControl.Size = new System.Drawing.Size(1180, 741);
             this.photoSelectControl.TabIndex = 0;
@@ -75,6 +80,7 @@
             this.Controls.Add(this.btn_Back);
             this.Controls.Add(this.photoSelectControl);
             this.Name = "PhotoDialog";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "PhotoDialog";
             this.ResumeLayout(false);
 

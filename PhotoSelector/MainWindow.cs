@@ -93,14 +93,37 @@ namespace PhotoSelector
         }
 
         /// <summary>
-        /// 仕分け画像Gridへのマウスドラッグ時の処理
+        /// 画像読み込みとサムネイル表示
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PhotoGrid_DragEnter(object sender, DragEventArgs e)
+        /// <param name="folderPath"></param>
+        private void LoadImages(string folderPath)
         {
-            if (e.Data.GetDataPresent(typeof(PhotoSelectControl)) ||
-                e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (!Directory.Exists(folderPath))
+                return;
+
+            foreach (string filePath in Directory.GetFiles(folderPath))
+            {
+                PhotoSelectControl ctrl = new PhotoSelectControl();
+                ctrl.FileFullPath = filePath;
+                ctrl.PhotoSelectControlMouseDoubleClicked += Ctrl_MouseDoubleClick;
+                ctrl.DragEnter += Ctrl_DragEnter;
+                ctrl.DragDrop += Ctrl_DragDrop;
+                _photoList.Add(ctrl);
+            }
+
+            photoGrid.PhotoList = _photoList;
+            ShowThumbnails();
+        }
+
+        #region ドラッグ&ドロップ処理
+        /// <summary>
+        /// DragEnterイベントの共通処理
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="condition"></param>
+        private void DragEnterCommon(DragEventArgs e, Func<bool> condition)
+        {
+            if (condition())
             {
                 e.Effect = DragDropEffects.All;
             }
@@ -108,6 +131,20 @@ namespace PhotoSelector
             {
                 e.Effect = DragDropEffects.None;
             }
+        }
+
+        /// <summary>
+        /// 仕分け画像Gridへのマウスドラッグ時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PhotoGrid_DragEnter(object sender, DragEventArgs e)
+        {
+            DragEnterCommon(e, () =>
+            {
+                bool retval = e.Data.GetDataPresent(typeof(PhotoSelectControl)) || e.Data.GetDataPresent(DataFormats.FileDrop);
+                return retval;
+            });
         }
 
         /// <summary>
@@ -160,24 +197,38 @@ namespace PhotoSelector
         }
 
         /// <summary>
-        /// 画像読み込みとサムネイル表示
+        /// Grid上のサムネイル画像上に、他のサムネイル画像がドラッグされた時の処理
         /// </summary>
-        /// <param name="folderPath"></param>
-        private void LoadImages(string folderPath)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Ctrl_DragEnter(object sender, DragEventArgs e)
         {
-            if (!Directory.Exists(folderPath))
+            DragEnterCommon(e, () =>
+            {
+                return e.Data.GetDataPresent(typeof(PhotoSelectControl));
+            });
+        }
+
+        /// <summary>
+        /// Grid上のサムネイル画像上に、他のサムネイル画像がドロップされた時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Ctrl_DragDrop(object sender, DragEventArgs e)
+        {
+            var ctrl = sender as PhotoSelectControl;
+
+            if (ctrl == null)
                 return;
 
-            foreach (string filePath in Directory.GetFiles(folderPath))
+            if (ctrl.IsKeep)
             {
-                PhotoSelectControl ctrl = new PhotoSelectControl();
-                ctrl.FileFullPath = filePath;
-                ctrl.PhotoSelectControlMouseDoubleClicked += Ctrl_MouseDoubleClick;
-                _photoList.Add(ctrl);
+                KeepPhotoGrid_DragDrop(sender, e);
             }
-
-            photoGrid.PhotoList = _photoList;
-            ShowThumbnails();
+            else
+            {
+                PhotoGrid_DragDrop(sender, e);
+            }
         }
 
         /// <summary>
@@ -187,14 +238,10 @@ namespace PhotoSelector
         /// <param name="e"></param>
         private void KeepPhotoGrid_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(PhotoSelectControl)))
+            DragEnterCommon(e, () =>
             {
-                e.Effect = DragDropEffects.All;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
+                return e.Data.GetDataPresent(typeof(PhotoSelectControl));
+            });
         }
 
         /// <summary>
@@ -223,6 +270,7 @@ namespace PhotoSelector
             ShowKeepThumbnails();
             ShowThumbnails();
         }
+        #endregion
 
         /// <summary>
         /// サムネイル画像のダブルクリック時の処理
