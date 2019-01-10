@@ -78,6 +78,8 @@ namespace PhotoSelector.Controls
         {
             InitializeComponent();
 
+            DoubleBuffered = true;
+
             this.Scroll += PhotoGrid_Scroll;
         }
 
