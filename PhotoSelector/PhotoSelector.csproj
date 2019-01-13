@@ -77,6 +77,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveLoad\AsyncSave.cs" />
+    <Compile Include="SaveLoad\DataStruct\ItemData.cs" />
+    <Compile Include="SaveLoad\DataStruct\ItemRoot.cs" />
+    <Compile Include="SaveLoad\PhotoSelectData.cs" />
     <EmbeddedResource Include="Controls\PhotoSelectControl.resx">
       <DependentUpon>PhotoSelectControl.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,6 +1,7 @@
 ﻿using PhotoSelector.Controls;
 using PhotoSelector.Dialogs;
 using PhotoSelector.Library;
+using PhotoSelector.SaveLoad;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,6 +29,11 @@ namespace PhotoSelector
         /// 保留画像データリスト
         /// </summary>
         private static KeepPhotoList<PhotoSelectControl> _keepPhotoList = new KeepPhotoList<PhotoSelectControl>();
+
+        /// <summary>
+        /// OK/NG状態の保存先ファイル名
+        /// </summary>
+        private const string FILE_NAME = "photoSelect.xml";
 
         /// <summary>
         /// コンストラクタ
@@ -93,10 +99,50 @@ namespace PhotoSelector
         }
 
         /// <summary>
-        /// 画像読み込みとサムネイル表示
+        /// PhotoSelectCtrlに必要なイベントハンドラを登録
+        /// </summary>
+        /// <param name="ctrl"></param>
+        private void AddCtrlListner(PhotoSelectControl ctrl)
+        {
+            ctrl.PhotoSelectControlMouseDoubleClicked += Ctrl_MouseDoubleClick;
+            ctrl.DragEnter += Ctrl_DragEnter;
+            ctrl.DragDrop += Ctrl_DragDrop;
+            ctrl.PhotoSelectControlClicked += Ctrl_Click;
+            ctrl.OKChecked += Ctrl_OKChecked;
+            ctrl.NGChecked += Ctrl_NGChecked;
+        }
+
+        /// <summary>
+        /// 画像の読み込みと表示
         /// </summary>
         /// <param name="folderPath"></param>
         private void LoadImages(string folderPath)
+        {
+            string saveFileFullPath = folderPath + "\\" + FILE_NAME;
+
+            try
+            {
+                if (File.Exists(saveFileFullPath))
+                {
+                    LoadFromSavedFile(saveFileFullPath);
+                }
+                else
+                {
+                    LoadImageFiles(folderPath);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("読み込みに失敗しました");
+                return;
+            }
+        }
+
+        /// <summary>
+        /// 画像読み込みとサムネイル表示
+        /// </summary>
+        /// <param name="folderPath"></param>
+        private void LoadImageFiles(string folderPath)
         {
             if (!Directory.Exists(folderPath))
                 return;
@@ -105,17 +151,37 @@ namespace PhotoSelector
             {
                 PhotoSelectControl ctrl = new PhotoSelectControl();
                 ctrl.FileFullPath = filePath;
-                ctrl.PhotoSelectControlMouseDoubleClicked += Ctrl_MouseDoubleClick;
-                ctrl.DragEnter += Ctrl_DragEnter;
-                ctrl.DragDrop += Ctrl_DragDrop;
-                ctrl.PhotoSelectControlClicked += Ctrl_Click;
-                ctrl.OKChecked += Ctrl_OKChecked;
-                ctrl.NGChecked += Ctrl_NGChecked;
+                AddCtrlListner(ctrl);
                 _photoList.Add(ctrl);
             }
 
             photoGrid.PhotoList = _photoList;
             ShowThumbnails();
+        }
+
+        /// <summary>
+        /// OK/NG状態を保存したファイルからの読み込み
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void LoadFromSavedFile(string fileName)
+        {
+            List<PhotoSelectControl> readData = PhotoSelectData.Load(fileName);
+
+            foreach(var ctrl in readData)
+            {
+                AddCtrlListner(ctrl);
+                if (ctrl.IsKeep)
+                {
+                    _keepPhotoList.Add(ctrl);
+                }
+                else
+                {
+                    _photoList.Add(ctrl);
+                }
+            }
+
+            ShowThumbnails();
+            ShowKeepThumbnails();
         }
 
         #region ドラッグ&ドロップ処理
