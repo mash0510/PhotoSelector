@@ -97,7 +97,7 @@ namespace PhotoSelector
         /// </summary>
         /// <param name="folderPath"></param>
         private void LoadImages(string folderPath)
-        {
+            {
             if (!Directory.Exists(folderPath))
                 return;
 
@@ -108,6 +108,7 @@ namespace PhotoSelector
                 ctrl.PhotoSelectControlMouseDoubleClicked += Ctrl_MouseDoubleClick;
                 ctrl.DragEnter += Ctrl_DragEnter;
                 ctrl.DragDrop += Ctrl_DragDrop;
+                ctrl.PhotoSelectControlClicked += Ctrl_Click;
                 _photoList.Add(ctrl);
             }
 
@@ -294,7 +295,7 @@ namespace PhotoSelector
         #endregion
 
         /// <summary>
-        /// サムネイル画像のダブルクリック時の処理
+        /// 画像コントロールのダブルクリック時の処理
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -319,6 +320,73 @@ namespace PhotoSelector
 
             dlg.Show(this);
             dlg.ShowPhoto(index);
+        }
+
+        /// <summary>
+        /// 画像コントロールクリック時の選択処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Ctrl_Click(object sender, EventArgs e)
+        {
+            PhotoSelectControl selectedCtrl = sender as PhotoSelectControl;
+
+            if (Control.ModifierKeys == Keys.None)
+            {
+                var selectedCtrlListMain = _photoList.Where(c => c.Selected == true && c.Index != selectedCtrl.Index).ToList();
+                var selectedCtrlListKeep = _keepPhotoList.Where(c => c.Selected == true && c.Index != selectedCtrl.Index).ToList();
+                SelectControls(selectedCtrlListMain, false);
+                SelectControls(selectedCtrlListKeep, false);
+            }
+            else if (Control.ModifierKeys == Keys.Shift)
+            {
+                if (selectedCtrl.IsKeep)
+                {
+                    MultiSelectControls(selectedCtrl, _keepPhotoList);
+                }
+                else
+                {
+                    MultiSelectControls(selectedCtrl, _photoList);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shiftキーを押しながらの複数選択処理
+        /// </summary>
+        /// <param name="selectedCtrl"></param>
+        /// <param name="photoList"></param>
+        private void MultiSelectControls(PhotoSelectControl selectedCtrl, List<PhotoSelectControl> photoList)
+        {
+            PhotoSelectControl prevSelectedCtrl = null;
+            List<PhotoSelectControl> procList = new List<PhotoSelectControl>();
+
+            prevSelectedCtrl = photoList.Where(c => c.Selected).FirstOrDefault();
+
+            if (prevSelectedCtrl == null)
+                return;
+
+            int startIdx = Math.Min(selectedCtrl.CellIndex, prevSelectedCtrl.CellIndex);
+            int endIdx = Math.Max(selectedCtrl.CellIndex, prevSelectedCtrl.CellIndex);
+
+            for (int i = startIdx; i <= endIdx; i++)
+            {
+                procList.Add(photoList[i]);
+                SelectControls(procList, true);
+            }
+        }
+
+        /// <summary>
+        /// 引数で渡したコントロールを、選択、もしくは非選択にする
+        /// </summary>
+        /// <param name="ctrls"></param>
+        /// <param name="selected"></param>
+        private void SelectControls(List<PhotoSelectControl> ctrls, bool selected)
+        {
+            foreach (var ctrl in ctrls)
+            {
+                ctrl.Selected = selected;
+            }
         }
 
         /// <summary>

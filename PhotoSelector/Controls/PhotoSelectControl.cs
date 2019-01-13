@@ -57,10 +57,23 @@ namespace PhotoSelector.Controls
             set { pb_Thumbnail.SizeMode = value; }
         }
 
+        private bool _selected = false;
         /// <summary>
         /// 選択状態の設定と取得
         /// </summary>
-        public bool Selected { get; set; } = false;
+        public bool Selected
+        {
+            get
+            {
+                return _selected;
+            }
+            set
+            {
+                _selected = value;
+                this.BackColor = value ? SystemColors.Highlight : SystemColors.Window;
+            }
+
+        }
 
         /// <summary>
         /// 選択可能かどうか
@@ -79,6 +92,10 @@ namespace PhotoSelector.Controls
         /// ダブルクリック時のイベント
         /// </summary>
         public event MouseEventHandler PhotoSelectControlMouseDoubleClicked;
+        /// <summary>
+        /// クリック時のイベント
+        /// </summary>
+        public event System.EventHandler PhotoSelectControlClicked;
 
         /// <summary>
         /// コンストラクタ
@@ -283,7 +300,7 @@ namespace PhotoSelector.Controls
 
             Selected = !Selected;
 
-            this.BackColor = Selected ? SystemColors.Highlight : SystemColors.Window;
+            PhotoSelectControlClicked?.Invoke(this, e);
         }
 
         /// <summary>
