@@ -97,7 +97,7 @@ namespace PhotoSelector
         /// </summary>
         /// <param name="folderPath"></param>
         private void LoadImages(string folderPath)
-            {
+        {
             if (!Directory.Exists(folderPath))
                 return;
 
@@ -109,6 +109,8 @@ namespace PhotoSelector
                 ctrl.DragEnter += Ctrl_DragEnter;
                 ctrl.DragDrop += Ctrl_DragDrop;
                 ctrl.PhotoSelectControlClicked += Ctrl_Click;
+                ctrl.OKChecked += Ctrl_OKChecked;
+                ctrl.NGChecked += Ctrl_NGChecked;
                 _photoList.Add(ctrl);
             }
 
@@ -386,6 +388,61 @@ namespace PhotoSelector
             foreach (var ctrl in ctrls)
             {
                 ctrl.Selected = selected;
+            }
+        }
+
+        /// <summary>
+        /// OKが選択された時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Ctrl_OKChecked(object sender, EventArgs e)
+        {
+            PhotoSelectControl ctrl = sender as PhotoSelectControl;
+
+            MultiOKNGSelect(true, ctrl.IsKeep);
+        }
+
+        /// <summary>
+        /// NGが選択された時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Ctrl_NGChecked(object sender, EventArgs e)
+        {
+            PhotoSelectControl ctrl = sender as PhotoSelectControl;
+
+            MultiOKNGSelect(false, ctrl.IsKeep);
+        }
+
+        /// <summary>
+        /// OK/NG選択の複数コントロール処理
+        /// </summary>
+        /// <param name="isOK"></param>
+        /// <param name="isKeep"></param>
+        private void MultiOKNGSelect(bool isOK, bool isKeep)
+        {
+            List<PhotoSelectControl> selectedList = new List<PhotoSelectControl>();
+
+            if (isKeep)
+            {
+                selectedList = _keepPhotoList.Where(c => c.Selected == true).ToList();
+            }
+            else
+            {
+                selectedList = _photoList.Where(c => c.Selected == true).ToList();
+            }
+
+            foreach(var ctrl in selectedList)
+            {
+                if (isOK)
+                {
+                    ctrl.SetOK();
+                }
+                else
+                {
+                    ctrl.SetNG();
+                }
             }
         }
 

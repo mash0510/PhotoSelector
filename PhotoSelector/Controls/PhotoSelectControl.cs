@@ -328,7 +328,7 @@ namespace PhotoSelector.Controls
         {
             if (rb_OK.Checked)
             {
-                OKChecked?.Invoke(sender, e);
+                OKChecked?.Invoke(this, e);
             }
         }
 
@@ -341,7 +341,7 @@ namespace PhotoSelector.Controls
         {
             if (rb_NG.Checked)
             {
-                NGChecked?.Invoke(sender, e);
+                NGChecked?.Invoke(this, e);
             }
         }
 

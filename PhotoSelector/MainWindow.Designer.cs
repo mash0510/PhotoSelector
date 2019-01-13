@@ -41,7 +41,6 @@
             this.rb_NG = new System.Windows.Forms.RadioButton();
             this.lbl_KeepPhotos = new System.Windows.Forms.Label();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
-            this.btn_OKNGSort = new System.Windows.Forms.Button();
             this.photoGrid = new PhotoSelector.Controls.PhotoGrid();
             this.keepPhotoGrid = new PhotoSelector.Controls.PhotoGrid();
             this.menuStrip1.SuspendLayout();
@@ -175,22 +174,11 @@
             // 
             // splitContainer.Panel2
             // 
-            this.splitContainer.Panel2.Controls.Add(this.btn_OKNGSort);
             this.splitContainer.Panel2.Controls.Add(this.keepPhotoGrid);
             this.splitContainer.Panel2.Controls.Add(this.lbl_KeepPhotos);
             this.splitContainer.Size = new System.Drawing.Size(1568, 909);
             this.splitContainer.SplitterDistance = 1051;
             this.splitContainer.TabIndex = 7;
-            // 
-            // btn_OKNGSort
-            // 
-            this.btn_OKNGSort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_OKNGSort.Location = new System.Drawing.Point(363, 10);
-            this.btn_OKNGSort.Name = "btn_OKNGSort";
-            this.btn_OKNGSort.Size = new System.Drawing.Size(134, 38);
-            this.btn_OKNGSort.TabIndex = 7;
-            this.btn_OKNGSort.Text = "OK/NG振分";
-            this.btn_OKNGSort.UseVisualStyleBackColor = true;
             // 
             // photoGrid
             // 
@@ -264,6 +252,5 @@
         private Controls.PhotoGrid keepPhotoGrid;
         private System.Windows.Forms.Label lbl_KeepPhotos;
         private System.Windows.Forms.SplitContainer splitContainer;
-        private System.Windows.Forms.Button btn_OKNGSort;
     }
 }
