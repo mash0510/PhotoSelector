@@ -49,11 +49,6 @@ namespace PhotoSelector.Controls
         public bool IsKeep { get; set; } = false;
  
         /// <summary>
-        /// 選択状態の設定と取得
-        /// </summary>
-        public bool Selected { get; set; } = false;
-
-        /// <summary>
         /// サイズモードの設定と取得
         /// </summary>
         public PictureBoxSizeMode PhotoSizeMode
@@ -61,6 +56,11 @@ namespace PhotoSelector.Controls
             get { return pb_Thumbnail.SizeMode; }
             set { pb_Thumbnail.SizeMode = value; }
         }
+
+        /// <summary>
+        /// 選択状態の設定と取得
+        /// </summary>
+        public bool Selected { get; set; } = false;
 
         /// <summary>
         /// 選択可能かどうか

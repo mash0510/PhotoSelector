@@ -177,16 +177,16 @@ namespace PhotoSelector
             {
                 // 画像選択コントロールのドロップの場合、保留画像Gridからメイン画像Gridへ画像を移動する処理を実行する。
 
-                PhotoSelectControl ctrl = e.Data.GetData(typeof(PhotoSelectControl)) as PhotoSelectControl;
+                PhotoSelectControl dropCtrl = e.Data.GetData(typeof(PhotoSelectControl)) as PhotoSelectControl;
 
-                if (ctrl == null)
-                    return;
+                DropCommonProc(dropCtrl, _keepPhotoList, (ctrl) =>
+                {
+                    if (_photoList.Contains(ctrl))
+                        return;
 
-                if (_photoList.Contains(ctrl))
-                    return;
-
-                _keepPhotoList.Remove(ctrl);
-                _photoList.InsertControl(ctrl);
+                    _keepPhotoList.Remove(ctrl);
+                    _photoList.InsertControl(ctrl);
+                });
 
                 photoGrid.PhotoList = _photoList;
                 keepPhotoGrid.PhotoList = _keepPhotoList;
@@ -254,21 +254,42 @@ namespace PhotoSelector
             if (!e.Data.GetDataPresent(typeof(PhotoSelectControl)))
                 return;
 
-            PhotoSelectControl ctrl = e.Data.GetData(typeof(PhotoSelectControl)) as PhotoSelectControl;
+            PhotoSelectControl droppedCtrl = e.Data.GetData(typeof(PhotoSelectControl)) as PhotoSelectControl;
 
-            if (ctrl == null)
-                return;
+            DropCommonProc(droppedCtrl, _photoList, (ctrl) =>
+            {
+                if (_keepPhotoList.Contains(ctrl))
+                    return;
 
-            if (_keepPhotoList.Contains(ctrl))
-                return;
-
-            _keepPhotoList.Add(ctrl);
-            _photoList.Remove(ctrl);
+                _keepPhotoList.Add(ctrl);
+                _photoList.Remove(ctrl);
+            });
 
             keepPhotoGrid.PhotoList = _keepPhotoList;
 
             ShowKeepThumbnails();
             ShowThumbnails();
+        }
+
+        /// <summary>
+        /// ドロップ処理の共通ロジック
+        /// </summary>
+        /// <param name="droppedCtrl"></param>
+        /// <param name="photoList"></param>
+        /// <param name="proc"></param>
+        private void DropCommonProc(PhotoSelectControl droppedCtrl, List<PhotoSelectControl> photoList, Action<PhotoSelectControl> proc)
+        {
+            List<PhotoSelectControl> selectedCtrl = photoList.Where(c => c.Selected == true).ToList();
+            if (!selectedCtrl.Contains(droppedCtrl))
+                selectedCtrl.Add(droppedCtrl);
+
+            foreach (var ctrl in selectedCtrl)
+            {
+                if (ctrl == null)
+                    continue;
+
+                proc(ctrl);
+            }
         }
         #endregion
 
