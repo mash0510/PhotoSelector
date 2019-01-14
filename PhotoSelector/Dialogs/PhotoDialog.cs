@@ -97,6 +97,16 @@ namespace PhotoSelector.Dialogs
             DispPhotoIndex = index;
 
             photoSelectControl.FileFullPath = photoCtrl.FileFullPath;
+
+            if (photoCtrl.IsOK)
+            {
+                photoSelectControl.SetOK();
+            }
+            else
+            {
+                photoSelectControl.SetNG();
+            }
+
             photoSelectControl.DispFullImage(true);
         }
 

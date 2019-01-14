@@ -31,6 +31,11 @@ namespace PhotoSelector
         private static KeepPhotoList<PhotoSelectControl> _keepPhotoList = new KeepPhotoList<PhotoSelectControl>();
 
         /// <summary>
+        /// 非同期保存モジュール
+        /// </summary>
+        private AsyncSave _asyncSave = new AsyncSave();
+
+        /// <summary>
         /// OK/NG状態の保存先ファイル名
         /// </summary>
         private const string FILE_NAME = "photoSelect.xml";
@@ -130,6 +135,8 @@ namespace PhotoSelector
                 {
                     LoadImageFiles(folderPath);
                 }
+
+                _asyncSave.StartBgSave(saveFileFullPath, _photoList, _keepPhotoList);
             }
             catch
             {
@@ -179,6 +186,9 @@ namespace PhotoSelector
                     _photoList.Add(ctrl);
                 }
             }
+
+            photoGrid.PhotoList = _photoList;
+            keepPhotoGrid.PhotoList = _keepPhotoList;
 
             ShowThumbnails();
             ShowKeepThumbnails();
