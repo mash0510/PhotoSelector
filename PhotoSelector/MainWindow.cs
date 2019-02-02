@@ -190,8 +190,8 @@ namespace PhotoSelector
             photoGrid.PhotoList = _photoList;
             keepPhotoGrid.PhotoList = _keepPhotoList;
 
-            ShowThumbnails();
             ShowKeepThumbnails();
+            ShowThumbnails();
         }
 
         #region ドラッグ&ドロップ処理
