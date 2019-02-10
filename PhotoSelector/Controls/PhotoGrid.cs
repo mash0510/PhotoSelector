@@ -47,7 +47,10 @@ namespace PhotoSelector.Controls
                 _photoList = value;
 
                 if (_photoList == null || value.Count <= 0)
+                {
+                    this.Controls.Clear();
                     return;
+                }
 
                 if (_cellSize.Width == 0 && _cellSize.Height == 0)
                 {

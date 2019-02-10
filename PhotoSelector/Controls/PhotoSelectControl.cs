@@ -47,7 +47,12 @@ namespace PhotoSelector.Controls
         /// 保留画像かどうか
         /// </summary>
         public bool IsKeep { get; set; } = false;
- 
+
+        /// <summary>
+        /// 振り分け済みかどうか
+        /// </summary>
+        public bool IsAssorted { get; set; } = false;
+
         /// <summary>
         /// サイズモードの設定と取得
         /// </summary>

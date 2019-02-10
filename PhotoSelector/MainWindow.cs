@@ -78,6 +78,8 @@ namespace PhotoSelector
             rb_AllPictures.CheckedChanged -= Rb_AllPictures_CheckedChanged;
             rb_OK.CheckedChanged -= Rb_OK_CheckedChanged;
             rb_NG.CheckedChanged -= Rb_NG_CheckedChanged;
+
+            menu_ExecSorting.Click -= Menu_ExecSorting_Click;
         }
 
         /// <summary>
@@ -101,6 +103,8 @@ namespace PhotoSelector
             rb_AllPictures.CheckedChanged += Rb_AllPictures_CheckedChanged;
             rb_OK.CheckedChanged += Rb_OK_CheckedChanged;
             rb_NG.CheckedChanged += Rb_NG_CheckedChanged;
+
+            menu_ExecSorting.Click += Menu_ExecSorting_Click;
         }
 
         /// <summary>
@@ -529,8 +533,8 @@ namespace PhotoSelector
         /// <param name="e"></param>
         private void MainWindow_SizeChanged(object sender, EventArgs e)
         {
-            ShowThumbnails();
             ShowKeepThumbnails();
+            ShowThumbnails();
         }
 
         /// <summary>
@@ -540,8 +544,8 @@ namespace PhotoSelector
         /// <param name="e"></param>
         private void SplitContainer_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            ShowThumbnails();
             ShowKeepThumbnails();
+            ShowThumbnails();
         }
 
         /// <summary>
@@ -622,6 +626,37 @@ namespace PhotoSelector
 
                 return filterCondition(photoSelectCtrl);
             });
+        }
+
+        /// <summary>
+        /// 振り分け実行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Menu_ExecSorting_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var assortedPhotoList = AssortPhoto.Execute(_photoList);
+
+                assortedPhotoList.ForEach(ctrl => _photoList.Remove(ctrl));
+
+                photoGrid.PhotoList = _photoList;
+                photoGrid.RefreshDisp();
+
+                assortedPhotoList.ForEach(ctrl =>
+                {
+                    ctrl.Visible = false;
+                    ctrl.Dispose();
+                });
+
+
+                MessageBox.Show("完了しました");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
