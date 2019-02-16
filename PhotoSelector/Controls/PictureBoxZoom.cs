@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoSelector.Library;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -122,7 +123,8 @@ namespace PhotoSelector.Controls
             }
             catch
             {
-                // 読み込みに失敗したら、そのままnullを返し、画像を非表示にする。
+                // 読み込みに失敗したらnullを返し、画像を非表示にする。
+                ImageLoadManager.UpdateLoadedStatus(FileFullPath, false);
             }
             finally
             {
@@ -141,13 +143,19 @@ namespace PhotoSelector.Controls
             if (!forceUpdateImage && this.Image != null)
                 return;
 
-            if (_loading)
-                return;
-
             if (this.Image != null)
                 return;
 
             Bitmap img = null;
+
+            if (ImageLoadManager.IsLoadProcExecuted(FileFullPath))
+            {
+                return;
+            }
+            else
+            {
+                ImageLoadManager.UpdateLoadedStatus(FileFullPath, true);
+            }
 
             await Task.Run(() =>
             {

@@ -33,6 +33,8 @@ namespace PhotoSelector.Controls
         /// </summary>
         private Semaphore _semaphore = new Semaphore(1, 1);
 
+        private Func<PhotoSelectControl, bool> _filterProc = null;
+
         /// <summary>
         /// 表示する写真情報の取得
         /// </summary>
@@ -84,11 +86,56 @@ namespace PhotoSelector.Controls
             DoubleBuffered = true;
 
             this.Scroll += PhotoGrid_Scroll;
+            this.MouseWheel += PhotoGrid_MouseWheel;
         }
 
+        /// <summary>
+        /// マウスホイール操作時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PhotoGrid_MouseWheel(object sender, MouseEventArgs e)
+        {
+            ScrollProcess();
+        }
+
+        /// <summary>
+        /// スクロール操作時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PhotoGrid_Scroll(object sender, ScrollEventArgs e)
         {
+            ScrollProcess();
+        }
+
+        /// <summary>
+        /// スクロール時の処理
+        /// </summary>
+        private void ScrollProcess()
+        {
+            if (_filterProc != null)
+            {
+                RefreshDisp(_filterProc);
+            }
+
             Refresh();
+        }
+
+        /// <summary>
+        /// 表示範囲にあるかどうか
+        /// </summary>
+        /// <param name="locateX"></param>
+        /// <param name="locateY"></param>
+        /// <returns></returns>
+        private bool IsVisibleScope(int locateX, int locateY)
+        {
+            int scopeY = _cellSize.Height * 3;
+
+            bool withinScopeX = (0 <= locateX && locateX <= this.Width) ? true : false;
+            bool withinScopeY = (-1 * scopeY <= locateY && locateY <= this.Height + scopeY) ? true : false;
+
+            return withinScopeX && withinScopeY;
         }
 
         /// <summary>
@@ -100,11 +147,13 @@ namespace PhotoSelector.Controls
             if (PhotoList == null)
                 return;
 
-            if (IsHeightOnlyChanged())
-            {
-                // サイズ変更操作がウィンドウの高さのみの場合は、各コントロールの表示座標を変える必要はないので、処理しない。
-                return;
-            }
+            _filterProc = filterProc;
+
+            //if (IsHeightOnlyChanged())
+            //{
+            //    // サイズ変更操作がウィンドウの高さのみの場合は、各コントロールの表示座標を変える必要はないので、処理しない。
+            //    return;
+            //}
 
             int index = 0;
 
@@ -121,9 +170,17 @@ namespace PhotoSelector.Controls
                     if (filterProc(PhotoList[index]))
                     {
                         PhotoList[index].Location = new Point(locateX, locateY);
-                        PhotoList[index].Visible = true;
-                        PhotoList[index].DispThumbnailImage(_semaphore);
                         PhotoList[index].CellIndex = i;
+
+                        if (IsVisibleScope(locateX, locateY) || index == PhotoList.Count - 1 || index == 0)
+                        {
+                            PhotoList[index].Visible = true;
+                            PhotoList[index].DispThumbnailImage(_semaphore);
+                        }
+                        else
+                        {
+                            PhotoList[index].Visible = false;
+                        }
 
                         index++;
                         break;
@@ -195,6 +252,8 @@ namespace PhotoSelector.Controls
         /// <param name="proc"></param>
         private void GridLoop(Func<int, int, int, bool> proc)
         {
+            SuspendLayout();
+
             int numColumn = this.Width / (_cellSize.Width + CellMargin);
             if (numColumn == 0) numColumn = 1;
 
@@ -220,6 +279,8 @@ namespace PhotoSelector.Controls
             }
 
             loopEnd:;
+
+            ResumeLayout();
         }
     }
 }

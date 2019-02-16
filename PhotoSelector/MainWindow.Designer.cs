@@ -57,7 +57,7 @@
             this.ファイルFToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1593, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(2053, 33);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -176,8 +176,8 @@
             // 
             this.splitContainer.Panel2.Controls.Add(this.keepPhotoGrid);
             this.splitContainer.Panel2.Controls.Add(this.lbl_KeepPhotos);
-            this.splitContainer.Size = new System.Drawing.Size(1568, 909);
-            this.splitContainer.SplitterDistance = 1051;
+            this.splitContainer.Size = new System.Drawing.Size(2028, 1144);
+            this.splitContainer.SplitterDistance = 1359;
             this.splitContainer.TabIndex = 7;
             // 
             // photoGrid
@@ -192,7 +192,7 @@
             this.photoGrid.Location = new System.Drawing.Point(3, 65);
             this.photoGrid.Name = "photoGrid";
             this.photoGrid.PhotoList = null;
-            this.photoGrid.Size = new System.Drawing.Size(1045, 841);
+            this.photoGrid.Size = new System.Drawing.Size(1353, 1076);
             this.photoGrid.TabIndex = 1;
             // 
             // keepPhotoGrid
@@ -208,7 +208,7 @@
             this.keepPhotoGrid.Location = new System.Drawing.Point(3, 65);
             this.keepPhotoGrid.Name = "keepPhotoGrid";
             this.keepPhotoGrid.PhotoList = null;
-            this.keepPhotoGrid.Size = new System.Drawing.Size(507, 841);
+            this.keepPhotoGrid.Size = new System.Drawing.Size(659, 1076);
             this.keepPhotoGrid.TabIndex = 5;
             // 
             // MainWindow
@@ -216,7 +216,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1593, 968);
+            this.ClientSize = new System.Drawing.Size(2053, 1203);
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;

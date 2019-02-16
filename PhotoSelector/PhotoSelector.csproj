@@ -68,6 +68,7 @@
       <DependentUpon>PhotoDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\AssortPhoto.cs" />
+    <Compile Include="Library\ImageLoadManager.cs" />
     <Compile Include="Library\KeepPhotoList.cs" />
     <Compile Include="Library\MainPhotoList.cs" />
     <Compile Include="MainWindow.cs">
