@@ -143,19 +143,19 @@ namespace PhotoSelector.Controls
             if (!forceUpdateImage && this.Image != null)
                 return;
 
-            if (this.Image != null)
-                return;
+            if (!forceUpdateImage)
+            {
+                if (ImageLoadManager.IsLoadProcExecuted(FileFullPath))
+                {
+                    return;
+                }
+                else
+                {
+                    ImageLoadManager.UpdateLoadedStatus(FileFullPath, true);
+                }
+            }
 
             Bitmap img = null;
-
-            if (ImageLoadManager.IsLoadProcExecuted(FileFullPath))
-            {
-                return;
-            }
-            else
-            {
-                ImageLoadManager.UpdateLoadedStatus(FileFullPath, true);
-            }
 
             await Task.Run(() =>
             {

@@ -36,7 +36,7 @@
             // btn_Back
             // 
             this.btn_Back.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_Back.Location = new System.Drawing.Point(504, 773);
+            this.btn_Back.Location = new System.Drawing.Point(678, 1030);
             this.btn_Back.Name = "btn_Back";
             this.btn_Back.Size = new System.Drawing.Size(75, 34);
             this.btn_Back.TabIndex = 1;
@@ -46,7 +46,7 @@
             // btn_Forward
             // 
             this.btn_Forward.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_Forward.Location = new System.Drawing.Point(610, 773);
+            this.btn_Forward.Location = new System.Drawing.Point(784, 1030);
             this.btn_Forward.Name = "btn_Forward";
             this.btn_Forward.Size = new System.Drawing.Size(75, 34);
             this.btn_Forward.TabIndex = 2;
@@ -59,23 +59,25 @@
             this.photoSelectControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.photoSelectControl.BackColor = System.Drawing.SystemColors.Window;
             this.photoSelectControl.CellIndex = -1;
             this.photoSelectControl.FileFullPath = null;
             this.photoSelectControl.Index = -1;
+            this.photoSelectControl.IsAssorted = false;
             this.photoSelectControl.IsKeep = false;
             this.photoSelectControl.Location = new System.Drawing.Point(12, 12);
             this.photoSelectControl.Name = "photoSelectControl";
             this.photoSelectControl.PhotoSizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.photoSelectControl.Selectable = true;
             this.photoSelectControl.Selected = false;
-            this.photoSelectControl.Size = new System.Drawing.Size(1180, 741);
+            this.photoSelectControl.Size = new System.Drawing.Size(1529, 998);
             this.photoSelectControl.TabIndex = 0;
             // 
             // PhotoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1204, 819);
+            this.ClientSize = new System.Drawing.Size(1553, 1076);
             this.Controls.Add(this.btn_Forward);
             this.Controls.Add(this.btn_Back);
             this.Controls.Add(this.photoSelectControl);

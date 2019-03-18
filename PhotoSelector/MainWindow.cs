@@ -480,7 +480,17 @@ namespace PhotoSelector
         {
             PhotoSelectControl ctrl = sender as PhotoSelectControl;
 
-            MultiOKNGSelect(true, ctrl.IsKeep);
+            if (ctrl.Selected)
+            {
+                // 選択状態のコントロールだった場合には、複数選択されたコントロールをまとめてOKにする
+                MultiOKNGSelect(true, ctrl.IsKeep);
+            }
+            else
+            {
+                // そうでなければ、選択状態を解除し、OKラジオボタンをONにする
+                // （こうしないと、未選択状態のコントロールのOK操作が、他の選択中のコントロールに反映されてしまう）
+                Ctrl_Click(ctrl, e);
+            }
         }
 
         /// <summary>
@@ -492,7 +502,17 @@ namespace PhotoSelector
         {
             PhotoSelectControl ctrl = sender as PhotoSelectControl;
 
-            MultiOKNGSelect(false, ctrl.IsKeep);
+            if (ctrl.Selected)
+            {
+                // 選択状態のコントロールだった場合には、複数選択されたコントロールをまとめてOKにする
+                MultiOKNGSelect(false, ctrl.IsKeep);
+            }
+            else
+            {
+                // そうでなければ、選択状態を解除し、OKラジオボタンをONにする
+                // （こうしないと、未選択状態のコントロールのOK操作が、他の選択中のコントロールに反映されてしまう）
+                Ctrl_Click(ctrl, e);
+            }
         }
 
         /// <summary>
