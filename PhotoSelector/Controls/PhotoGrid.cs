@@ -139,6 +139,41 @@ namespace PhotoSelector.Controls
         }
 
         /// <summary>
+        /// コントロールの高さのみが変わったかどうか（＝サイズ変更操作で、幅が変わらず、高さのみが変わったかどうか）
+        /// </summary>
+        /// <returns></returns>
+        private bool IsHeightOnlyChanged()
+        {
+            if (_oldCtrlSize.Height == 0 && _oldCtrlSize.Width == 0)
+            {
+                // 変更前のサイズが初期値の状態であれば、その時のコントロールサイズを変更前のサイズとして覚えておく。
+                _oldCtrlSize = this.Size;
+                return false;
+            }
+
+            bool isHeightOnlyChanged = false;
+
+            if (_oldCtrlSize.Width == this.Size.Width &&
+                _oldCtrlSize.Height == this.Size.Height)
+            {
+                // サイズが全く変わっていない場合は、全表示/OKのみ表示/NGのみ表示のいずれかにフィルタ設定が変更されたということなので、
+                // 更新処理を続行する。
+                isHeightOnlyChanged = false;
+            }
+
+            if (_oldCtrlSize.Width == this.Size.Width &&
+                _oldCtrlSize.Height != this.Size.Height)
+            {
+                // 高さのみが変わった場合は、写真の並びの変更は不要なので、更新処理は実行しない。
+                isHeightOnlyChanged = true;
+            }
+
+            _oldCtrlSize = this.Size;
+
+            return isHeightOnlyChanged;
+        }
+
+        /// <summary>
         /// 表示更新
         /// </summary>
         /// <param name="filterProc"></param>
@@ -146,6 +181,14 @@ namespace PhotoSelector.Controls
         {
             if (PhotoList == null)
                 return;
+
+            if (IsHeightOnlyChanged())
+            {
+                // サイズ変更操作がウィンドウの高さのみの場合は、各コントロールの表示座標を変える必要はないので、処理しない。
+                // （表示範囲が増えるため、この高さの変更での画像表示が必要になるケースもあるが、そのようなケースは描画しない仕様にする。
+                //   上下3行分の画像は描画しているため、そのようなケースはほとんど発生しないため）
+                return;
+            }
 
             _filterProc = filterProc;
 
