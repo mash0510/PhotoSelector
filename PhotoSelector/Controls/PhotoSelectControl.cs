@@ -372,5 +372,13 @@ namespace PhotoSelector.Controls
 
             lbl_FileName.Text = pb_Thumbnail.FileName;
         }
+
+        /// <summary>
+        /// 画像の読み込みをキャンセルする。
+        /// </summary>
+        public void CancelLoadImage()
+        {
+            pb_Thumbnail.CancelLoadImage();
+        }
     }
 }

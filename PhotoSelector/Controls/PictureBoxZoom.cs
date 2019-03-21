@@ -20,6 +20,12 @@ namespace PhotoSelector.Controls
         /// 画像読み込み中かどうか
         /// </summary>
         private bool _loading = false;
+
+        /// <summary>
+        /// 画像読み込みをキャンセルされたかどうか
+        /// </summary>
+        private bool _canceled = false;
+
         /// <summary>
         /// 画像読み込みスレッドの数を制限するためのセマフォ
         /// </summary>
@@ -160,6 +166,16 @@ namespace PhotoSelector.Controls
             await Task.Run(() =>
             {
                 _semaphore.WaitOne();
+
+                if (_canceled)
+                {
+                    _canceled = false;
+                    _semaphore.Release();
+                    ImageLoadManager.UpdateLoadedStatus(FileFullPath, false);
+
+                    return;
+                }
+
                 img = LoadImage(() =>
                 {
                     using (FileStream stream = File.OpenRead(FileFullPath))
@@ -229,6 +245,7 @@ namespace PhotoSelector.Controls
         public void DispThumbnailImage(Semaphore semaphore, bool forceUpdateImage = false)
         {
             _semaphore = semaphore;
+
             this.DispThumbnailImageBody(forceUpdateImage);
         }
 
@@ -240,6 +257,14 @@ namespace PhotoSelector.Controls
         public void DispFullImage(bool forceUpdateImage = false)
         {
             this.DispFullImageBody(forceUpdateImage);
+        }
+
+        /// <summary>
+        /// 画像の読み込みをキャンセルする
+        /// </summary>
+        public void CancelLoadImage()
+        {
+            _canceled = true;
         }
     }
 }

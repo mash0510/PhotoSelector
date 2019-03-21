@@ -130,7 +130,7 @@ namespace PhotoSelector.Controls
         /// <returns></returns>
         private bool IsVisibleScope(int locateX, int locateY)
         {
-            int scopeY = _cellSize.Height * 3;
+            int scopeY = _cellSize.Height;
 
             bool withinScopeX = (0 <= locateX && locateX <= this.Width) ? true : false;
             bool withinScopeY = (-1 * scopeY <= locateY && locateY <= this.Height + scopeY) ? true : false;
@@ -216,6 +216,7 @@ namespace PhotoSelector.Controls
                         }
                         else
                         {
+                            PhotoList[index].CancelLoadImage();
                             PhotoList[index].Visible = false;
                         }
 
@@ -224,6 +225,7 @@ namespace PhotoSelector.Controls
                     }
                     else
                     {
+                        PhotoList[index].CancelLoadImage();
                         PhotoList[index].Visible = false;
                     }
 

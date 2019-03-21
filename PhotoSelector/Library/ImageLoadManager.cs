@@ -24,7 +24,7 @@ namespace PhotoSelector.Library
         /// <returns></returns>
         public static bool IsLoadProcExecuted(string fileFullPath)
         {
-            if (_imgLoadTable.ContainsKey(fileFullPath))
+            if (_imgLoadTable.ContainsKey(fileFullPath) && _imgLoadTable[fileFullPath] == true)
             {
                 return true;
             }
@@ -41,7 +41,7 @@ namespace PhotoSelector.Library
         {
             if (_imgLoadTable.ContainsKey(fileFullPath))
             {
-                _imgLoadTable[fileFullPath] = true;
+                _imgLoadTable[fileFullPath] = status;
             }
             else
             {
