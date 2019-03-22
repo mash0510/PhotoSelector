@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="QuixifLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Library\QuixifLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,10 +71,10 @@
     <Compile Include="Dialogs\PhotoDialog.Designer.cs">
       <DependentUpon>PhotoDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Library\AssortPhoto.cs" />
-    <Compile Include="Library\ImageLoadManager.cs" />
-    <Compile Include="Library\KeepPhotoList.cs" />
-    <Compile Include="Library\MainPhotoList.cs" />
+    <Compile Include="Utilities\AssortPhoto.cs" />
+    <Compile Include="Utilities\ImageLoadManager.cs" />
+    <Compile Include="Utilities\KeepPhotoList.cs" />
+    <Compile Include="Utilities\MainPhotoList.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,6 +117,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Library\QuixifLib.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

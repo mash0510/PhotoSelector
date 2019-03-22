@@ -31,7 +31,7 @@ namespace PhotoSelector.Controls
         /// <summary>
         /// 写真の非同期読み込みのスレッド数を制限するセマフォ
         /// </summary>
-        private Semaphore _semaphore = new Semaphore(1, 1);
+        private Semaphore _semaphore = new Semaphore(4, 4);
 
         private Func<PhotoSelectControl, bool> _filterProc = null;
 
