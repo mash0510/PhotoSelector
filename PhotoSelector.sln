@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoSelector", "PhotoSelector\PhotoSelector.csproj", "{F9097E59-4824-408A-9782-53B5D4534947}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuixifLib", "QuixifLib\QuixifLib.csproj", "{874DCE57-7FDE-4100-9975-38FCEDC014B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F9097E59-4824-408A-9782-53B5D4534947}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9097E59-4824-408A-9782-53B5D4534947}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9097E59-4824-408A-9782-53B5D4534947}.Release|Any CPU.Build.0 = Release|Any CPU
+		{874DCE57-7FDE-4100-9975-38FCEDC014B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{874DCE57-7FDE-4100-9975-38FCEDC014B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{874DCE57-7FDE-4100-9975-38FCEDC014B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{874DCE57-7FDE-4100-9975-38FCEDC014B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

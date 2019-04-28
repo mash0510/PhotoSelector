@@ -239,34 +239,6 @@ namespace PhotoSelector.Controls
 
                         return thumbnail;
                     }
-
-
-                    //using (FileStream stream = File.OpenRead(FileFullPath))
-                    //using (Image orgimg = Bitmap.FromStream(stream, false, false))
-                    //{
-                    //    // EXIF情報を元に、画像を正しい向きに回転させる。
-                    //    RotateUpright(orgimg);
-
-                    //    int resizeHeight = 0;
-                    //    int resizeWidth = 0;
-
-                    //    if (IsLengthwiseDirection(orgimg))
-                    //    {
-                    //        // 縦撮りの写真の場合、縦方向が全部見えるサムネイル画像を生成する
-                    //        resizeHeight = this.Height;
-                    //        resizeWidth = (int)(orgimg.Width * ((double)resizeHeight / (double)orgimg.Height));
-                    //    }
-                    //    else
-                    //    {
-                    //        // 横取り写真の場合、横方向が全部見えるサムネイル画像を生成する
-                    //        resizeWidth = this.Width;
-                    //        resizeHeight = (int)(orgimg.Height * ((double)resizeWidth / (double)orgimg.Width));
-                    //    }
-
-                    //    Bitmap alteredImage = new Bitmap(orgimg, new Size(resizeWidth, resizeHeight));
-
-                    //    return alteredImage;
-                    //}
                 });
                 _semaphore.Release();
             });
