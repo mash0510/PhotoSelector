@@ -79,7 +79,9 @@ namespace PhotoSelector
             rb_OK.CheckedChanged -= Rb_OK_CheckedChanged;
             rb_NG.CheckedChanged -= Rb_NG_CheckedChanged;
 
+            menu_Open.Click -= Menu_Open_Click;
             menu_ExecSorting.Click -= Menu_ExecSorting_Click;
+            menu_Quit.Click -= Menu_Quit_Click;
         }
 
         /// <summary>
@@ -104,7 +106,9 @@ namespace PhotoSelector
             rb_OK.CheckedChanged += Rb_OK_CheckedChanged;
             rb_NG.CheckedChanged += Rb_NG_CheckedChanged;
 
+            menu_Open.Click += Menu_Open_Click;
             menu_ExecSorting.Click += Menu_ExecSorting_Click;
+            menu_Quit.Click += Menu_Quit_Click;
         }
 
         /// <summary>
@@ -649,6 +653,22 @@ namespace PhotoSelector
         }
 
         /// <summary>
+        /// フォルダオープン
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Menu_Open_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            {
+                if (fbd.ShowDialog(this) == DialogResult.OK)
+                {
+                    LoadImages(fbd.SelectedPath);
+                }
+            }
+        }
+
+        /// <summary>
         /// 振り分け実行
         /// </summary>
         /// <param name="sender"></param>
@@ -676,6 +696,29 @@ namespace PhotoSelector
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 終了
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Menu_Quit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        /// <summary>
+        /// アプリ終了時の処理
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (DialogResult.OK != MessageBox.Show("終了してよろしいですか？", "PhotoSelect", MessageBoxButtons.OKCancel))
+            {
+                e.Cancel = true;
+                return;
             }
         }
     }

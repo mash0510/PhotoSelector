@@ -83,9 +83,6 @@
     <Compile Include="SaveLoad\DataStruct\ItemData.cs" />
     <Compile Include="SaveLoad\DataStruct\ItemRoot.cs" />
     <Compile Include="SaveLoad\PhotoSelectData.cs" />
-    <EmbeddedResource Include="Controls\PhotoGrid.resx">
-      <DependentUpon>PhotoGrid.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\PhotoSelectControl.resx">
       <DependentUpon>PhotoSelectControl.cs</DependentUpon>
     </EmbeddedResource>
