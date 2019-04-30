@@ -109,6 +109,11 @@ namespace PhotoSelector.Controls
             ScrollProcess();
         }
 
+        protected override Point ScrollToControl(Control activeControl)
+        {
+            return this.AutoScrollPosition;
+        }
+
         /// <summary>
         /// スクロール時の処理
         /// </summary>
@@ -130,7 +135,7 @@ namespace PhotoSelector.Controls
         /// <returns></returns>
         private bool IsVisibleScope(int locateX, int locateY)
         {
-            int scopeY = _cellSize.Height;
+            int scopeY = _cellSize.Height * 3;
 
             bool withinScopeX = (0 <= locateX && locateX <= this.Width) ? true : false;
             bool withinScopeY = (-1 * scopeY <= locateY && locateY <= this.Height + scopeY) ? true : false;
