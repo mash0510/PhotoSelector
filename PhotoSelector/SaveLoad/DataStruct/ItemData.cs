@@ -17,5 +17,8 @@ namespace PhotoSelector.SaveLoad.DataStruct
 
         [System.Xml.Serialization.XmlAttribute("IsKeep")]
         public bool IsKeep { get; set; }
+
+        [System.Xml.Serialization.XmlAttribute("Index")]
+        public int Index { get; set; }
     }
 }

@@ -44,6 +44,7 @@ namespace PhotoSelector.SaveLoad
                 item.FilePath = data.FileFullPath;
                 item.IsOK = data.IsOK;
                 item.IsKeep = data.IsKeep;
+                item.Index = data.Index;
 
                 saveData.Records.Add(item);
             }
@@ -78,8 +79,11 @@ namespace PhotoSelector.SaveLoad
             foreach(var item in readData.Records)
             {
                 PhotoSelectControl data = new PhotoSelectControl();
+
                 data.FileFullPath = item.FilePath;
                 data.IsKeep = item.IsKeep;
+                data.Index = item.Index;
+
                 if (item.IsOK)
                 {
                     data.SetOK();
