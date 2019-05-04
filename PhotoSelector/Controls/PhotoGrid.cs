@@ -135,7 +135,7 @@ namespace PhotoSelector.Controls
         /// <returns></returns>
         private bool IsVisibleScope(int locateX, int locateY)
         {
-            int scopeY = _cellSize.Height * 3;
+            int scopeY = _cellSize.Height * 2;
 
             bool withinScopeX = (0 <= locateX && locateX <= this.Width) ? true : false;
             bool withinScopeY = (-1 * scopeY <= locateY && locateY <= this.Height + scopeY) ? true : false;
@@ -191,7 +191,7 @@ namespace PhotoSelector.Controls
             {
                 // サイズ変更操作がウィンドウの高さのみの場合は、各コントロールの表示座標を変える必要はないので、処理しない。
                 // （表示範囲が増えるため、この高さの変更での画像表示が必要になるケースもあるが、そのようなケースは描画しない仕様にする。
-                //   上下3行分の画像は描画しているため、そのようなケースはほとんど発生しないため）
+                //   上下2行分の画像は描画しているため、そのようなケースはほとんど発生しないため）
                 return;
             }
 

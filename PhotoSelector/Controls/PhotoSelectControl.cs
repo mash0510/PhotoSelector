@@ -62,6 +62,23 @@ namespace PhotoSelector.Controls
             set { pb_Thumbnail.SizeMode = value; }
         }
 
+        private bool _activated = false;
+        /// <summary>
+        /// アクティブ状態（マウスクリックで選ばれた状態）の設定と取得
+        /// </summary>
+        public bool Activated
+        {
+            get
+            {
+                return _activated;
+            }
+            set
+            {
+                _activated = value;
+                SetHighlight();
+            }
+        }
+
         private bool _selected = false;
         /// <summary>
         /// 選択状態の設定と取得
@@ -75,9 +92,17 @@ namespace PhotoSelector.Controls
             set
             {
                 _selected = value;
-                this.BackColor = value ? SystemColors.Highlight : SystemColors.Window;
+                SetHighlight();
             }
 
+        }
+
+        /// <summary>
+        /// ハイライト表示
+        /// </summary>
+        private void SetHighlight()
+        {
+            this.BackColor = this.Selected || this.Activated ? SystemColors.Highlight : SystemColors.Window;
         }
 
         /// <summary>
@@ -101,6 +126,10 @@ namespace PhotoSelector.Controls
         /// クリック時のイベント
         /// </summary>
         public event System.EventHandler PhotoSelectControlClicked;
+        /// <summary>
+        /// マウスダウン時のイベント
+        /// </summary>
+        public event MouseEventHandler PhotoSelectControlMouseDown;
 
         /// <summary>
         /// コンストラクタ
@@ -135,6 +164,7 @@ namespace PhotoSelector.Controls
 
             this.Click += ThumbnailControl_Click;
             pb_Thumbnail.Click += ThumbnailControl_Click;
+
             pb_Thumbnail.DoubleClick += Pb_Thumbnail_DoubleClick;
 
             rb_OK.CheckedChanged += Rb_OK_CheckedChanged;
@@ -219,6 +249,8 @@ namespace PhotoSelector.Controls
             // （具体的には、ここで計算した矩形の範囲内でもう一度マウスクリックがなされたら、マウスドラッグ処理とは見なさないようにする）
             _doubleClickRectangle = new Rectangle(e.X - (_doubleClickSize.Width / 2), e.Y - (_doubleClickSize.Height / 2),
                                                          _doubleClickSize.Width, _doubleClickSize.Height);
+
+            PhotoSelectControlMouseDown?.Invoke(this, e);
         }
 
         /// <summary>
@@ -303,7 +335,11 @@ namespace PhotoSelector.Controls
             if (!Selectable)
                 return;
 
-            Selected = !Selected;
+            Activated = !Activated;
+            if (ModifierKeys == Keys.Shift)
+            {
+                Selected = !Selected;
+            }
 
             PhotoSelectControlClicked?.Invoke(this, e);
         }

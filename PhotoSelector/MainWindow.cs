@@ -118,6 +118,7 @@ namespace PhotoSelector
         private void AddCtrlListner(PhotoSelectControl ctrl)
         {
             ctrl.PhotoSelectControlMouseDoubleClicked += Ctrl_MouseDoubleClick;
+            ctrl.PhotoSelectControlMouseDown += Ctrl_PhotoSelectControlMouseDown;
             ctrl.DragEnter += Ctrl_DragEnter;
             ctrl.DragDrop += Ctrl_DragDrop;
             ctrl.PhotoSelectControlClicked += Ctrl_Click;
@@ -409,6 +410,33 @@ namespace PhotoSelector
         }
 
         /// <summary>
+        /// 画像コントロールのマウスダウンイベント処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Ctrl_PhotoSelectControlMouseDown(object sender, MouseEventArgs e)
+        {
+            PhotoSelectControl selectedCtrl = sender as PhotoSelectControl;
+
+            // Active状態のコントロールはアプリ全体で1つにしないといけないので、
+            // MainPhotoList、KeepPhotoList共に、クリックされたコントロール以外のActive状態のコントロールは非アクティブにする。
+            var activatedCtrlListMain = _photoList.Where(c => c.Activated == true && c.Index != selectedCtrl.Index).ToList();
+            var activatedCtrlListKeep = _keepPhotoList.Where(c => c.Activated == true && c.Index != selectedCtrl.Index).ToList();
+            InactivateControls(activatedCtrlListMain);
+            InactivateControls(activatedCtrlListKeep);
+
+            if (!selectedCtrl.Selected && ModifierKeys == Keys.None)
+            {
+                // 選択状態ではない画像コントロールをクリックした場合は、
+                // 他の選択状態のコントロールはすべて非選択状態にする。
+                var selectedCtrlListMain = _photoList.Where(c => c.Selected == true && c.Index != selectedCtrl.Index).ToList();
+                var selectedCtrlListKeep = _keepPhotoList.Where(c => c.Selected == true && c.Index != selectedCtrl.Index).ToList();
+                SelectControls(selectedCtrlListMain, false);
+                SelectControls(selectedCtrlListKeep, false);
+            }
+        }
+
+        /// <summary>
         /// 画像コントロールクリック時の選択処理
         /// </summary>
         /// <param name="sender"></param>
@@ -419,8 +447,8 @@ namespace PhotoSelector
 
             if (Control.ModifierKeys == Keys.None)
             {
-                var selectedCtrlListMain = _photoList.Where(c => c.Selected == true && c.Index != selectedCtrl.Index).ToList();
-                var selectedCtrlListKeep = _keepPhotoList.Where(c => c.Selected == true && c.Index != selectedCtrl.Index).ToList();
+                var selectedCtrlListMain = _photoList.Where(c => (c.Selected == true || c.Activated == true) && c.Index != selectedCtrl.Index).ToList();
+                var selectedCtrlListKeep = _keepPhotoList.Where(c => (c.Selected == true || c.Activated == true) && c.Index != selectedCtrl.Index).ToList();
                 SelectControls(selectedCtrlListMain, false);
                 SelectControls(selectedCtrlListKeep, false);
             }
@@ -447,7 +475,7 @@ namespace PhotoSelector
             PhotoSelectControl prevSelectedCtrl = null;
             List<PhotoSelectControl> procList = new List<PhotoSelectControl>();
 
-            prevSelectedCtrl = photoList.Where(c => c.Selected).FirstOrDefault();
+            prevSelectedCtrl = photoList.Where(c => c.Selected).LastOrDefault();
 
             if (prevSelectedCtrl == null)
                 return;
@@ -472,6 +500,23 @@ namespace PhotoSelector
             foreach (var ctrl in ctrls)
             {
                 ctrl.Selected = selected;
+
+                if (!selected)
+                {
+                    ctrl.Activated = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 引数で渡したコントロールの非アクティブ化
+        /// </summary>
+        /// <param name="ctrls"></param>
+        private void InactivateControls(List<PhotoSelectControl> ctrls)
+        {
+            foreach (var ctrl in ctrls)
+            {
+                ctrl.Activated = false;
             }
         }
 

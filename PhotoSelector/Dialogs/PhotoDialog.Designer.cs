@@ -36,9 +36,9 @@
             // btn_Back
             // 
             this.btn_Back.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_Back.Location = new System.Drawing.Point(678, 1030);
+            this.btn_Back.Location = new System.Drawing.Point(617, 1030);
             this.btn_Back.Name = "btn_Back";
-            this.btn_Back.Size = new System.Drawing.Size(75, 34);
+            this.btn_Back.Size = new System.Drawing.Size(136, 34);
             this.btn_Back.TabIndex = 1;
             this.btn_Back.Text = "戻る";
             this.btn_Back.UseVisualStyleBackColor = true;
@@ -48,7 +48,7 @@
             this.btn_Forward.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btn_Forward.Location = new System.Drawing.Point(784, 1030);
             this.btn_Forward.Name = "btn_Forward";
-            this.btn_Forward.Size = new System.Drawing.Size(75, 34);
+            this.btn_Forward.Size = new System.Drawing.Size(136, 34);
             this.btn_Forward.TabIndex = 2;
             this.btn_Forward.Text = "進む";
             this.btn_Forward.UseVisualStyleBackColor = true;
