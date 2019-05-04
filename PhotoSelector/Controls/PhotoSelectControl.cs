@@ -74,9 +74,30 @@ namespace PhotoSelector.Controls
             }
             set
             {
+                if (_activated && !value)
+                {
+                    // アクティブ状態→非アクティブに状態が変わった場合は、直前までアクティブ状態だったことを示すフラグを立てる。
+                    PrevActivated = true;
+                }
+                else
+                {
+                    // それ以外の場合は、直前アクティブフラグはおろす。
+                    PrevActivated = false;
+                }
+
                 _activated = value;
+
                 SetHighlight();
             }
+        }
+
+        /// <summary>
+        /// 直前までアクティブだったかどうか
+        /// </summary>
+        public bool PrevActivated
+        {
+            get;
+            set;
         }
 
         private bool _selected = false;
@@ -336,10 +357,6 @@ namespace PhotoSelector.Controls
                 return;
 
             Activated = !Activated;
-            if (ModifierKeys == Keys.Shift)
-            {
-                Selected = !Selected;
-            }
 
             PhotoSelectControlClicked?.Invoke(this, e);
         }
