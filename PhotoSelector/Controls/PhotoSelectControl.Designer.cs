@@ -72,7 +72,7 @@
             this.pb_Thumbnail.Location = new System.Drawing.Point(3, 3);
             this.pb_Thumbnail.Name = "pb_Thumbnail";
             this.pb_Thumbnail.Size = new System.Drawing.Size(326, 265);
-            this.pb_Thumbnail.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pb_Thumbnail.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb_Thumbnail.TabIndex = 3;
             this.pb_Thumbnail.TabStop = false;
             // 
